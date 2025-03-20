@@ -18,8 +18,6 @@ import androidx.fragment.app.Fragment;
 
 import com.example.emo.databinding.FragmentFirstBinding;
 
-import java.lang.reflect.Field;
-
 import android.graphics.PorterDuff;
 
 public class FirstFragment extends Fragment {
@@ -46,15 +44,20 @@ public class FirstFragment extends Fragment {
             moodEmoji = binding.moodEmoji;
             moodTextView = binding.moodTextView;
             moodSeekBar = binding.moodSeekBar;
+
+            // Установка максимального значения SeekBar на 6 (для диапазона от -3 до 3)
+            moodSeekBar.setMax(6);
             
-            moodSeekBar.setProgress(4); // 5 по умолчанию (индекс 4 + 1)
-            updateMoodUI(5);
-            
+            // Установка начального значения в центр (3 соответствует 0 на нашей шкале)
+            moodSeekBar.setProgress(3);
+            updateMoodUI(0); // Начальное значение 0 (нейтральное)
+
             // Обработчик изменения настроения
             moodSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
                 @Override
                 public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    int moodValue = progress + 1; // От 1 до 10
+                    // Преобразуем значение прогресса (0-6) в диапазон от -3 до 3
+                    int moodValue = progress - 3;
                     updateMoodUI(moodValue);
                 }
 
@@ -74,56 +77,64 @@ public class FirstFragment extends Fragment {
     }
 
     private void updateMoodUI(int moodValue) {
-        // Определяем настроение на основе значения ползунка (от 1 до 10)
+        // Определяем настроение на основе значения ползунка (от -3 до 3)
         String mood;
         int colorResId;
-        
-        if (moodValue <= 2) {
+        int emojiResId;
+
+        if (moodValue == -3) {
             mood = "Очень плохо";
             colorResId = R.color.mood_very_bad;
-        } else if (moodValue <= 4) {
+            emojiResId = R.drawable.very_bad__3;
+        } else if (moodValue == -2) {
             mood = "Плохо";
             colorResId = R.color.mood_bad;
-        } else if (moodValue <= 6) {
-            mood = "Нормально";
+            emojiResId = R.drawable.badly__2;
+        } else if (moodValue == -1) {
+            mood = "Грустно";
             colorResId = R.color.mood_neutral;
-        } else if (moodValue <= 8) {
+            emojiResId = R.drawable.little_bad__1;
+        } else if (moodValue == 0) {
+            mood = "Нейтрально";
+            colorResId = R.color.mood_neutral;
+            emojiResId = R.drawable.neutral_0;
+        } else if (moodValue == 1) {
+            mood = "Нормально";
+            colorResId = R.color.mood_good;
+            emojiResId = R.drawable.fine_1;
+        } else if (moodValue == 2) {
             mood = "Хорошо";
             colorResId = R.color.mood_good;
-        } else {
+            emojiResId = R.drawable.joyful_2;
+        } else if (moodValue == 3) {
             mood = "Отлично";
             colorResId = R.color.mood_very_good;
+            emojiResId = R.drawable.great_3;
+        } else {
+            // Значение по умолчанию
+            mood = "Нейтрально";
+            colorResId = R.color.mood_neutral;
+            emojiResId = R.drawable.neutral_0;
         }
-        
-        // Обновляем текст и цвет
-        moodTextView.setText(String.format("%s (%d/10)", mood, moodValue));
+
+        // Изменим формат отображения текста, чтобы показывать реальное значение от -3 до 3
+        moodTextView.setText(String.format("%s (%d)", mood, moodValue));
         int color = ContextCompat.getColor(requireContext(), colorResId);
         moodTextView.setTextColor(color);
-        
+
         // Изменяем цвет ползунка без использования рефлексии
         moodSeekBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-        
+
         // Для Android 6.0+ можно использовать этот метод вместо рефлексии
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             moodSeekBar.getThumb().setColorFilter(color, PorterDuff.Mode.SRC_IN);
         }
-        
+
         // Обновление смайлика в зависимости от настроения
-        if (moodValue <= 3) {
-            // Грустный смайлик для плохого настроения
-            moodEmoji.setImageResource(R.drawable.emoji_sad);
-            setEmojiSize(0.9f); // Немного уменьшаем грустный смайлик
-        } else if (moodValue <= 7) {
-            // Нейтральный смайлик для среднего настроения
-            moodEmoji.setImageResource(R.drawable.emoji_neutral);
-            setEmojiSize(1.0f); // Стандартный размер
-        } else {
-            // Счастливый смайлик для хорошего настроения
-            moodEmoji.setImageResource(R.drawable.emoji_happy);
-            setEmojiSize(1.1f); // Немного увеличиваем счастливый смайлик
-        }
+        moodEmoji.setImageResource(emojiResId);
+        setEmojiSize(0.5f); // Стандартный размер для всех эмодзи
     }
-    
+
     private void setEmojiSize(float scale) {
         ViewGroup.LayoutParams params = moodEmoji.getLayoutParams();
         int baseSize = (int) (150 * getResources().getDisplayMetrics().density);
