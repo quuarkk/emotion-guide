@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Emo</string>
+    <string name="app_name">Эмоции Гид</string>
     <string name="action_settings">Настройки</string>
     <!-- Strings used for fragments for navigation -->
     <string name="first_fragment_label">Оценка настроения</string>
