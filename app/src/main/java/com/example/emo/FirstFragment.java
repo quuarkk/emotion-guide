@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -18,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.emo.databinding.FragmentFirstBinding;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class FirstFragment extends Fragment {
@@ -56,19 +56,6 @@ public class FirstFragment extends Fragment {
 
         // Анимация появления списка
         recyclerView.setAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
-
-//        BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_navigation);
-//        if (bottomNav != null) {
-//            int bottomNavHeight = bottomNav.getHeight();
-//            if (bottomNavHeight == 0) {
-//                bottomNav.post(() -> {
-//                    int height = bottomNav.getHeight();
-//                    binding.getRoot().setPadding(16, 16, 16, height + 16);
-//                });
-//            } else {
-//                binding.getRoot().setPadding(16, 16, 16, bottomNavHeight + 16);
-//            }
-//        }
 
         // Кнопка расчета
         Button calculateButton = binding.calculateButton;
@@ -147,13 +134,15 @@ public class FirstFragment extends Fragment {
     }
 
     private float calculateCategoryScore(int[] indices) {
+        int[] invertedIndices = {0, 1, 4, 5, 6, 7, 10, 11, 12, 13, 16, 17, 18, 19, 22, 23, 24, 25, 28, 29};
         int sum = 0;
         for (int index : indices) {
-            int rawScore = questions.get(index).getScore(); // 0-6
-            int adjustedScore = (index == 2 || index == 8 || index == 12 || index == 20) ? 6 - rawScore : rawScore;
-            sum += adjustedScore + 1; // Преобразуем в 1-7
+            int rawScore = questions.get(index).getScore(); // -3...3
+            boolean shouldInvert = Arrays.stream(invertedIndices).anyMatch(i -> i == index);
+            int adjustedScore = shouldInvert ? rawScore + 4 : -rawScore + 4; // Корректно для обеих ситуаций
+            sum += adjustedScore; // 1-7
         }
-        return sum / 10.0f; // Среднее по 10 вопросам
+        return sum / 10.0f;
     }
 
     private String interpretState(float wellbeing, float activity, float mood) {
