@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Toast;
-
+import android.widget.ImageButton;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -31,6 +31,13 @@ public class RegisterActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        ImageButton backButton = findViewById(R.id.back_btn);
+
+        // Устанавливаем обработчик клика
+        backButton.setOnClickListener(v -> {
+            finish(); // Закрывает текущую активность и возвращает на предыдущий экран
+        });
 
         binding.signUpBtn.setOnClickListener(new View.OnClickListener() {
             @Override

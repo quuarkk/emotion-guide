@@ -5,19 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".RegisterActivity"
-    android:background="@color/white">
+    android:background="@color/background_color">
 
-<!--    <ImageButton-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:id="@+id/back_btn"-->
-<!--        android:src="@drawable/ic_round_arrow_back"-->
-<!--        android:backgroundTint="@color/white"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintStart_toStartOf="parent"-->
-<!--        android:layout_marginStart="14dp"-->
-<!--        android:layout_marginTop="24dp"-->
-<!--        app:tint="#636565" />-->
+    <ImageButton
+        android:id="@+id/back_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_round_arrow_back"
+        android:background="?android:attr/selectableItemBackground"
+        app:tint="?android:attr/textColorPrimary"
+        android:clickable="true"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="14dp"
+        android:layout_marginTop="24dp" />
 
     <ImageView
         android:id="@+id/imageView3"
@@ -36,15 +37,16 @@
         android:fontFamily="@font/ubuntu_medium"
         android:text="Sign up"
         android:textSize="30sp"
-        android:layout_marginStart="55dp"
-        android:layout_marginTop="34dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView3" />
+        android:textColor="@color/text_color"
+    android:layout_marginStart="55dp"
+    android:layout_marginTop="34dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/imageView3" />
 
     <LinearLayout
+        android:id="@+id/email_lin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/email_lin"
         android:layout_marginStart="50dp"
         android:layout_marginTop="34dp"
         app:layout_constraintTop_toBottomOf="@id/login_title"
@@ -56,7 +58,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/email_icon"
-            android:layout_gravity="center_vertical" />
+            app:tint="?android:attr/textColorPrimary"
+        android:layout_gravity="center_vertical"/>
 
         <EditText
             android:id="@+id/email_et"
@@ -65,14 +68,16 @@
             android:layout_marginStart="9dp"
             android:fontFamily="@font/ubuntu_light"
             android:hint="Email"
-            />
+            android:textColor="@color/text_color"
+        android:textColorHint="?android:attr/textColorHint"
+        android:backgroundTint="?android:attr/colorControlNormal" />
 
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/username_lin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/username_lin"
         android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
         app:layout_constraintTop_toBottomOf="@id/email_lin"
@@ -84,7 +89,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/username_icon"
-            android:layout_gravity="center_vertical" />
+            app:tint="?android:attr/textColorPrimary"
+        android:layout_gravity="center_vertical" />
 
         <EditText
             android:id="@+id/username_et"
@@ -93,15 +99,16 @@
             android:layout_marginStart="9dp"
             android:fontFamily="@font/ubuntu_light"
             android:hint="Username"
-            />
+            android:textColor="@color/text_color"
+        android:textColorHint="?android:attr/textColorHint"
+        android:backgroundTint="?android:attr/colorControlNormal" />
 
     </LinearLayout>
 
-
     <LinearLayout
+        android:id="@+id/password_lin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/password_lin"
         android:layout_marginStart="50dp"
         android:layout_marginTop="15dp"
         app:layout_constraintTop_toBottomOf="@id/username_lin"
@@ -113,8 +120,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/password_icon"
-            android:layout_gravity="center_vertical"
-            />
+            app:tint="?android:attr/textColorPrimary"
+        android:layout_gravity="center_vertical" />
 
         <EditText
             android:id="@+id/password_et"
@@ -124,7 +131,9 @@
             android:fontFamily="@font/ubuntu_light"
             android:hint="Password"
             android:inputType="textPassword"
-            />
+            android:textColor="@color/text_color"
+        android:textColorHint="?android:attr/textColorHint"
+        android:backgroundTint="?android:attr/colorControlNormal" />
 
     </LinearLayout>
 
@@ -136,8 +145,9 @@
         android:fontFamily="@font/ubuntu_light"
         android:layout_marginTop="40dp"
         android:text="Sign up"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/password_lin" />
+        android:textColor="@color/white"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/password_lin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

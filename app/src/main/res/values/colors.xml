@@ -8,7 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#2A63F6</color>
-    
+    <color name="background_color">#FFFFFF</color>
+    <color name="text_color">#000000</color>
+
     <!-- Цвета для настроения -->
     <color name="mood_very_bad">#FF0000</color>    <!-- Красный -->
     <color name="mood_bad">#FF6600</color>         <!-- Оранжевый -->
