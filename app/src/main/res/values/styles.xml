@@ -2,9 +2,11 @@
 <resources>
     <!-- Базовая тема приложения -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">@color/blue</item>
-        <item name="colorSecondary">@color/blue</item>
+        <item name="colorPrimary">#4A90E2</item>
+        <item name="colorSecondary">#4A90E2</item>
         <item name="android:windowBackground">@color/background_color</item>
+        <item name="colorPrimaryVariant">#4A90E2</item>
+        <item name="android:statusBarColor">#4A90E2</item>
     </style>
     <style name="AppButton" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/text_color</item>

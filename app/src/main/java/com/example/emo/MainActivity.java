@@ -65,6 +65,10 @@ public class MainActivity extends AppCompatActivity {
                     if (id == R.id.FirstFragment) {
                         Log.d(TAG, "Переход к FirstFragment");
                         navController.navigate(R.id.FirstFragment);
+                        // Изменяем заголовок для FirstFragment
+                        if (getSupportActionBar() != null) {
+                            getSupportActionBar().setTitle("Оцените свое состояние");
+                        }
                     } else if (id == R.id.TestsFragment) {
                         Log.d(TAG, "Переход к TestsFragment");
                         navController.navigate(R.id.TestsFragment);
@@ -90,9 +94,16 @@ public class MainActivity extends AppCompatActivity {
                 return true;
             });
 
-            // Логирование навигации
+            // Логирование навигации и обновление заголовка
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
                 Log.d(TAG, "Навигация к: " + destination.getLabel() + ", id: " + destination.getId());
+                
+                // Устанавливаем заголовок в зависимости от фрагмента
+                if (destination.getId() == R.id.FirstFragment) {
+                    if (getSupportActionBar() != null) {
+                        getSupportActionBar().setTitle("Оцените свое состояние");
+                    }
+                }
             });
 
         } catch (Exception e) {

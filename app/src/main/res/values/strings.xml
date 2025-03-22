@@ -2,7 +2,7 @@
     <string name="app_name">Эмоции Гид</string>
     <string name="action_settings">Настройки</string>
     <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">Оценка настроения</string>
+    <string name="first_fragment_label">Оцените свое состояние</string>
     <string name="second_fragment_label">Результат</string>
     <string name="next">Далее</string>
     <string name="previous">Назад</string>
