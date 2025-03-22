@@ -9,7 +9,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="blue">#2A63F6</color>
     <color name="positive_color">#4CAF50</color>
-    <color name="negative_color">#F44336</color>
+    <color name="negative_color">#FF5252</color>
     <color name="calculate_button_background">#FFC107</color>
     <color name="calculate_button_text">#000000</color>
     <color name="card_background">#424242</color>
@@ -18,9 +18,9 @@
     <color name="button_pressed">#424242</color>
     <color name="button_zero">#1976D2</color>
     <color name="button_positive">#4CAF50</color>
-    <color name="button_negative">#F44336</color>
+    <color name="button_negative">#FF5252</color>
     <color name="background_color">#121212</color>
-    <color name="mood_very_bad">#FF0000</color>
+    <color name="mood_very_bad">#FF5252</color>
     <color name="mood_bad">#FF6600</color>
     <color name="mood_neutral">#FFCC00</color>
     <color name="mood_good">#99CC00</color>

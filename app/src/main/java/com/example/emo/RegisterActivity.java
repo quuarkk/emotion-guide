@@ -10,9 +10,7 @@ import android.os.Looper;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
@@ -198,21 +196,6 @@ public class RegisterActivity extends AppCompatActivity {
                             Toast.makeText(getApplicationContext(), "Ошибка регистрации: " + e.getMessage(), Toast.LENGTH_LONG).show();
                         });
             }
-        });
-
-        // Улучшение работы с клавиатурой - закрытие клавиатуры при нажатии на любую область экрана вне полей ввода
-        View rootView = findViewById(android.R.id.content);
-        rootView.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                View focusedView = getCurrentFocus();
-                if (focusedView != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-                    focusedView.clearFocus();
-                    return true;
-                }
-            }
-            return false;
         });
     }
 

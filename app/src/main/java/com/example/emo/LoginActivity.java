@@ -1,15 +1,12 @@
 package com.example.emo;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -143,21 +140,6 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
             }
-        });
-
-        // Улучшение работы с клавиатурой - закрытие клавиатуры при нажатии на любую область экрана вне полей ввода
-        View rootView = findViewById(android.R.id.content);
-        rootView.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                View focusedView = getCurrentFocus();
-                if (focusedView != null) {
-                    InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-                    imm.hideSoftInputFromWindow(focusedView.getWindowToken(), 0);
-                    focusedView.clearFocus();
-                    return true;
-                }
-            }
-            return false;
         });
     }
 }
