@@ -72,6 +72,11 @@ public class MainActivity extends AppCompatActivity {
                     } else if (id == R.id.AiPsychologistFragment) {
                         Log.d(TAG, "Переход к AiPsychologistFragment");
                         navController.navigate(R.id.AiPsychologistFragment);
+                    } else if (id == R.id.action_logout) {
+                        FirebaseAuth.getInstance().signOut();
+                        startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                        finish();
+                        return true;
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "Ошибка при навигации: " + e.getMessage());

@@ -12,4 +12,7 @@
         android:id="@+id/AiPsychologistFragment"
         android:icon="@drawable/ic_ai"
         android:title="ИИ-психолог" />
+    <item
+        android:id="@+id/action_logout"
+        android:title="Выйти" />
 </menu> 

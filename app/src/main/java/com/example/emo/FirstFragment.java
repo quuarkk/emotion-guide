@@ -59,13 +59,8 @@ public class FirstFragment extends Fragment {
 
         // Кнопка расчета
         Button calculateButton = binding.calculateButton;
-        CardView resultCard = binding.resultCard;
-        TextView resultTextView = binding.resultTextView;
-
         calculateButton.setOnClickListener(v -> {
-            calculateAndDisplayState(resultTextView);
-            resultCard.setVisibility(View.VISIBLE);
-            resultCard.startAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.slide_in_left));
+            calculateAndDisplayState(null); // Передаем null, так как resultTextView больше не нужен
         });
     }
 
@@ -123,14 +118,16 @@ public class FirstFragment extends Fragment {
         float activityScore = calculateCategoryScore(activityIndices);
         float moodScore = calculateCategoryScore(moodIndices);
 
-        String result = String.format(
-                "\uD83D\uDC99 Самочувствие: %.1f\n" +
-                        "\uD83D\uDC9A Активность: %.1f\n" +
-                        "\uD83D\uDC9B Настроение: %.1f\n\n" +
-                        "Ваше состояние:\n%s",
-                wellbeingScore, activityScore, moodScore, interpretState(wellbeingScore, activityScore, moodScore)
-        );
-        resultTextView.setText(result);
+        // Показываем SecondFragment как диалог
+        SecondFragment dialog = new SecondFragment();
+        Bundle args = new Bundle();
+        args.putFloat("wellbeing_score", wellbeingScore);
+        args.putFloat("activity_score", activityScore);
+        args.putFloat("mood_score", moodScore);
+        args.putString("interpretation", interpretState(wellbeingScore, activityScore, moodScore));
+        dialog.setArguments(args);
+        dialog.show(getParentFragmentManager(), "SecondFragment");
+
     }
 
     private float calculateCategoryScore(int[] indices) {
