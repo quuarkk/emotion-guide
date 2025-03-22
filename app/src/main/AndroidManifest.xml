@@ -18,11 +18,13 @@
         <activity
             android:name=".RegisterActivity"
             android:exported="false"
-            android:theme="@style/Theme.Emo.NoActionBar" />
+            android:theme="@style/Theme.Emo.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".LoginActivity"
             android:exported="false"
-            android:theme="@style/Theme.Emo.NoActionBar" />
+            android:theme="@style/Theme.Emo.NoActionBar"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".MainActivity"
             android:exported="true"
