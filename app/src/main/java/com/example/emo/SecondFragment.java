@@ -21,6 +21,7 @@ public class SecondFragment extends DialogFragment {
     }
 
     @Override
+
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -35,7 +36,7 @@ public class SecondFragment extends DialogFragment {
             float wellbeingScore = getArguments().getFloat("wellbeing_score", 0f);
             float activityScore = getArguments().getFloat("activity_score", 0f);
             float moodScore = getArguments().getFloat("mood_score", 0f);
-            String interpretation = getArguments().getString("interpretation", "");
+            String interpretation = getArguments().getString("interpretation", "Нет данных");
 
             String result = String.format(
                     "\uD83D\uDC99 Самочувствие: %.1f\n" +
@@ -45,6 +46,8 @@ public class SecondFragment extends DialogFragment {
                     wellbeingScore, activityScore, moodScore, interpretation
             );
             binding.textviewSecond.setText(result);
+        } else {
+            binding.textviewSecond.setText("Ошибка: данные не переданы");
         }
 
         // Закрытие диалога по кнопке "Назад"

@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
@@ -49,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Настройка AppBarConfiguration с учетом drawer
             appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.FirstFragment, R.id.TestsFragment, R.id.AiPsychologistFragment)
+                    R.id.FirstFragment, R.id.TestsFragment, R.id.AiPsychologistFragment, R.id.ChartsFragment)
                     .setOpenableLayout(drawer)
                     .build();
 
@@ -72,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
                     } else if (id == R.id.AiPsychologistFragment) {
                         Log.d(TAG, "Переход к AiPsychologistFragment");
                         navController.navigate(R.id.AiPsychologistFragment);
+                    } else if (id == R.id.ChartsFragment) {
+                        Log.d(TAG, "Переход к ChartsFragment");
+                        navController.navigate(R.id.ChartsFragment);
                     } else if (id == R.id.action_logout) {
                         FirebaseAuth.getInstance().signOut();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));

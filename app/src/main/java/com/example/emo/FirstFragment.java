@@ -1,23 +1,29 @@
 package com.example.emo;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emo.databinding.FragmentFirstBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
 public class FirstFragment extends Fragment {
@@ -25,6 +31,7 @@ public class FirstFragment extends Fragment {
     private FragmentFirstBinding binding;
     private SanAdapter adapter;
     private List<SanQuestion> questions;
+    private static final String TAG = "FirstFragment";
 
     @Override
     public View onCreateView(
@@ -110,6 +117,15 @@ public class FirstFragment extends Fragment {
     }
 
     private void calculateAndDisplayState(TextView resultTextView) {
+        // Проверяем авторизацию
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(getContext(), "Пожалуйста, войдите в аккаунт", Toast.LENGTH_LONG).show();
+            // Переходим к экрану логина
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            getActivity().finish();
+            return;
+        }
+
         int[] wellbeingIndices = {0, 1, 6, 7, 12, 13, 18, 19, 24, 25};
         int[] activityIndices = {2, 3, 8, 9, 14, 15, 20, 21, 26, 27};
         int[] moodIndices = {4, 5, 10, 11, 16, 17, 22, 23, 28, 29};
@@ -117,6 +133,9 @@ public class FirstFragment extends Fragment {
         float wellbeingScore = calculateCategoryScore(wellbeingIndices);
         float activityScore = calculateCategoryScore(activityIndices);
         float moodScore = calculateCategoryScore(moodIndices);
+
+        // Сохранение результатов в Firebase
+        saveTestResult(wellbeingScore, activityScore, moodScore);
 
         // Показываем SecondFragment как диалог
         SecondFragment dialog = new SecondFragment();
@@ -127,7 +146,31 @@ public class FirstFragment extends Fragment {
         args.putString("interpretation", interpretState(wellbeingScore, activityScore, moodScore));
         dialog.setArguments(args);
         dialog.show(getParentFragmentManager(), "SecondFragment");
+    }
 
+    private void saveTestResult(float wellbeingScore, float activityScore, float moodScore) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference testResultsRef = FirebaseDatabase.getInstance("https://emotions-guide-c173c-default-rtdb.europe-west1.firebasedatabase.app/")
+                .getReference()
+                .child("Users")
+                .child(userId)
+                .child("TestResults");
+
+        // Создаём новый результат теста
+        TestResult result = new TestResult(wellbeingScore, activityScore, moodScore, new Date().getTime());
+        String resultId = testResultsRef.push().getKey(); // Генерируем уникальный ключ для результата
+
+        Log.d(TAG, "Сохранение результата: wellbeing=" + wellbeingScore + ", activity=" + activityScore + ", mood=" + moodScore);
+
+        testResultsRef.child(resultId).setValue(result)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Результат теста успешно сохранён: " + resultId);
+                    Toast.makeText(getContext(), "Результат сохранён!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Ошибка сохранения результата теста: " + e.getMessage());
+                    Toast.makeText(getContext(), "Ошибка сохранения: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
     }
 
     private float calculateCategoryScore(int[] indices) {
