@@ -44,13 +44,13 @@ public class SanAdapter extends RecyclerView.Adapter<SanAdapter.SanViewHolder> {
         highlightSelectedButton(holder, question.getScore());
 
         // Обработчики нажатий на кнопки
-        holder.btn3Positive.setOnClickListener(v -> setScoreAndHighlight(holder, question, 3));
-        holder.btn2Positive.setOnClickListener(v -> setScoreAndHighlight(holder, question, 2));
-        holder.btn1Positive.setOnClickListener(v -> setScoreAndHighlight(holder, question, 1));
+        holder.btn3Positive.setOnClickListener(v -> setScoreAndHighlight(holder, question, -3)); // Позитивный полюс
+        holder.btn2Positive.setOnClickListener(v -> setScoreAndHighlight(holder, question, -2));
+        holder.btn1Positive.setOnClickListener(v -> setScoreAndHighlight(holder, question, -1));
         holder.btn0.setOnClickListener(v -> setScoreAndHighlight(holder, question, 0));
-        holder.btn1Negative.setOnClickListener(v -> setScoreAndHighlight(holder, question, -1));
-        holder.btn2Negative.setOnClickListener(v -> setScoreAndHighlight(holder, question, -2));
-        holder.btn3Negative.setOnClickListener(v -> setScoreAndHighlight(holder, question, -3));
+        holder.btn1Negative.setOnClickListener(v -> setScoreAndHighlight(holder, question, 1));
+        holder.btn2Negative.setOnClickListener(v -> setScoreAndHighlight(holder, question, 2));
+        holder.btn3Negative.setOnClickListener(v -> setScoreAndHighlight(holder, question, 3)); // Негативный полюс
     }
 
     private void resetButtonColors(SanViewHolder holder) {
@@ -81,39 +81,39 @@ public class SanAdapter extends RecyclerView.Adapter<SanAdapter.SanViewHolder> {
         int positiveColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.button_positive);
         int negativeColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.button_negative);
         int neutralColor = ContextCompat.getColor(holder.itemView.getContext(), R.color.button_zero);
-        int highlightedTextColor = ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white); // Белый текст для выделенных кнопок
+        int highlightedTextColor = ContextCompat.getColor(holder.itemView.getContext(), android.R.color.white);
 
         Log.d(TAG, "Highlighting button with score: " + score);
         Log.d(TAG, "Highlighted text color: " + Integer.toHexString(highlightedTextColor));
 
         switch (score) {
             case 3:
-                holder.btn3Positive.getBackground().setTintList(ColorStateList.valueOf(positiveColor));
-                holder.btn3Positive.setTextColor(highlightedTextColor);
+                holder.btn3Negative.getBackground().setTintList(ColorStateList.valueOf(negativeColor)); // Подсвечиваем правую кнопку
+                holder.btn3Negative.setTextColor(highlightedTextColor);
                 break;
             case 2:
-                holder.btn2Positive.getBackground().setTintList(ColorStateList.valueOf(positiveColor));
-                holder.btn2Positive.setTextColor(highlightedTextColor);
+                holder.btn2Negative.getBackground().setTintList(ColorStateList.valueOf(negativeColor));
+                holder.btn2Negative.setTextColor(highlightedTextColor);
                 break;
             case 1:
-                holder.btn1Positive.getBackground().setTintList(ColorStateList.valueOf(positiveColor));
-                holder.btn1Positive.setTextColor(highlightedTextColor);
+                holder.btn1Negative.getBackground().setTintList(ColorStateList.valueOf(negativeColor));
+                holder.btn1Negative.setTextColor(highlightedTextColor);
                 break;
             case 0:
                 holder.btn0.getBackground().setTintList(ColorStateList.valueOf(neutralColor));
                 holder.btn0.setTextColor(highlightedTextColor);
                 break;
             case -1:
-                holder.btn1Negative.getBackground().setTintList(ColorStateList.valueOf(negativeColor));
-                holder.btn1Negative.setTextColor(highlightedTextColor);
+                holder.btn1Positive.getBackground().setTintList(ColorStateList.valueOf(positiveColor));
+                holder.btn1Positive.setTextColor(highlightedTextColor);
                 break;
             case -2:
-                holder.btn2Negative.getBackground().setTintList(ColorStateList.valueOf(negativeColor));
-                holder.btn2Negative.setTextColor(highlightedTextColor);
+                holder.btn2Positive.getBackground().setTintList(ColorStateList.valueOf(positiveColor));
+                holder.btn2Positive.setTextColor(highlightedTextColor);
                 break;
             case -3:
-                holder.btn3Negative.getBackground().setTintList(ColorStateList.valueOf(negativeColor));
-                holder.btn3Negative.setTextColor(highlightedTextColor);
+                holder.btn3Positive.getBackground().setTintList(ColorStateList.valueOf(positiveColor)); // Подсвечиваем левую кнопку
+                holder.btn3Positive.setTextColor(highlightedTextColor);
                 break;
         }
     }

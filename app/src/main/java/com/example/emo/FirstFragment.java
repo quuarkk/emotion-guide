@@ -73,36 +73,36 @@ public class FirstFragment extends Fragment {
 
     private List<SanQuestion> initializeQuestions() {
         List<SanQuestion> questionList = new ArrayList<>();
-        questionList.add(new SanQuestion("Самочувствие хорошее", "Самочувствие плохое"));
-        questionList.add(new SanQuestion("Чувствую себя сильным", "Чувствую себя слабым"));
-        questionList.add(new SanQuestion("Активный", "Пассивный"));
-        questionList.add(new SanQuestion("Подвижный", "Малоподвижный"));
-        questionList.add(new SanQuestion("Веселый", "Грустный"));
-        questionList.add(new SanQuestion("Хорошее настроение", "Плохое настроение"));
-        questionList.add(new SanQuestion("Работоспособный", "Разбитый"));
-        questionList.add(new SanQuestion("Полный сил", "Обессиленный"));
-        questionList.add(new SanQuestion("Быстрый", "Медлительный"));
-        questionList.add(new SanQuestion("Деятельный", "Бездеятельный"));
-        questionList.add(new SanQuestion("Счастливый", "Несчастный"));
-        questionList.add(new SanQuestion("Жизнерадостный", "Мрачный"));
-        questionList.add(new SanQuestion("Расслабленный", "Напряженный"));
-        questionList.add(new SanQuestion("Здоровый", "Больной"));
-        questionList.add(new SanQuestion("Увлеченный", "Безучастный"));
-        questionList.add(new SanQuestion("Заинтересованный", "Равнодушный"));
-        questionList.add(new SanQuestion("Восторженный", "Унылый"));
-        questionList.add(new SanQuestion("Радостный", "Печальный"));
-        questionList.add(new SanQuestion("Отдохнувший", "Усталый"));
-        questionList.add(new SanQuestion("Свежий", "Изнуренный"));
-        questionList.add(new SanQuestion("Возбужденный", "Сонливый"));
-        questionList.add(new SanQuestion("Желание работать", "Желание отдохнуть"));
-        questionList.add(new SanQuestion("Спокойный", "Взволнованный"));
-        questionList.add(new SanQuestion("Оптимистичный", "Пессимистичный"));
-        questionList.add(new SanQuestion("Выносливый", "Утомляемый"));
-        questionList.add(new SanQuestion("Бодрый", "Вялый"));
-        questionList.add(new SanQuestion("Соображать легко", "Соображать трудно"));
-        questionList.add(new SanQuestion("Внимательный", "Рассеянный"));
-        questionList.add(new SanQuestion("Полный надежд", "Разочарованный"));
-        questionList.add(new SanQuestion("Довольный", "Недовольный"));
+        questionList.add(new SanQuestion("Самочувствие хорошее", "Самочувствие плохое")); // Инвертирован
+        questionList.add(new SanQuestion("Чувствую себя сильным", "Чувствую себя слабым")); // Инвертирован
+        questionList.add(new SanQuestion("Активный", "Пассивный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Подвижный", "Малоподвижный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Веселый", "Грустный")); // Инвертирован
+        questionList.add(new SanQuestion("Хорошее настроение", "Плохое настроение")); // Инвертирован
+        questionList.add(new SanQuestion("Работоспособный", "Разбитый")); // Инвертирован
+        questionList.add(new SanQuestion("Полный сил", "Обессиленный")); // Инвертирован
+        questionList.add(new SanQuestion("Быстрый", "Медлительный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Деятельный", "Бездеятельный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Счастливый", "Несчастный")); // Инвертирован
+        questionList.add(new SanQuestion("Жизнерадостный", "Мрачный")); // Инвертирован
+        questionList.add(new SanQuestion("Расслабленный", "Напряженный")); // Инвертирован
+        questionList.add(new SanQuestion("Здоровый", "Больной")); // Инвертирован
+        questionList.add(new SanQuestion("Увлеченный", "Безучастный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Заинтересованный", "Равнодушный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Восторженный", "Унылый")); // Инвертирован
+        questionList.add(new SanQuestion("Радостный", "Печальный")); // Инвертирован
+        questionList.add(new SanQuestion("Отдохнувший", "Усталый")); // Инвертирован
+        questionList.add(new SanQuestion("Свежий", "Изнуренный")); // Инвертирован
+        questionList.add(new SanQuestion("Возбужденный", "Сонливый")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Желание работать", "Желание отдохнуть")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Спокойный", "Взволнованный")); // Инвертирован
+        questionList.add(new SanQuestion("Оптимистичный", "Пессимистичный")); // Инвертирован
+        questionList.add(new SanQuestion("Выносливый", "Утомляемый")); // Инвертирован
+        questionList.add(new SanQuestion("Бодрый", "Вялый")); // Инвертирован
+        questionList.add(new SanQuestion("Соображать легко", "Соображать трудно")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Внимательный", "Рассеянный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Полный надежд", "Разочарованный")); // Инвертирован
+        questionList.add(new SanQuestion("Довольный", "Недовольный")); // Инвертирован
         return questionList;
     }
 
@@ -174,12 +174,10 @@ public class FirstFragment extends Fragment {
     }
 
     private float calculateCategoryScore(int[] indices) {
-        int[] invertedIndices = {0, 1, 4, 5, 6, 7, 10, 11, 12, 13, 16, 17, 18, 19, 22, 23, 24, 25, 28, 29};
         int sum = 0;
         for (int index : indices) {
             int rawScore = questions.get(index).getScore(); // -3...3
-            boolean shouldInvert = Arrays.stream(invertedIndices).anyMatch(i -> i == index);
-            int adjustedScore = shouldInvert ? rawScore + 4 : -rawScore + 4; // Корректно для обеих ситуаций
+            int adjustedScore = -rawScore + 4; // 3 → 1, -3 → 7
             sum += adjustedScore; // 1-7
         }
         return sum / 10.0f;
