@@ -5,6 +5,10 @@
         android:icon="@android:drawable/ic_menu_compass"
         android:title="Настроение" />
     <item
+        android:id="@+id/ChartsFragment"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="Графики состояния" />
+    <item
         android:id="@+id/navigation_tests"
         android:icon="@android:drawable/ic_menu_edit"
         android:title="Тесты" />
@@ -12,4 +16,7 @@
         android:id="@+id/navigation_ai_psychologist"
         android:icon="@android:drawable/ic_menu_help"
         android:title="ИИ-психолог" />
+    <item
+        android:id="@+id/action_logout"
+        android:title="Выйти" />
 </menu> 
