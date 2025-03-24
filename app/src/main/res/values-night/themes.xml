@@ -1,0 +1,32 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.Emo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">#1A5AAD</item>
+        <item name="colorPrimaryVariant">#1A5AAD</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor">#1A5AAD</item>
+    </style>
+    
+    <!-- Добавляем стиль NoActionBar для темной темы -->
+    <style name="Theme.Emo.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <!-- Используем те же цвета для NoActionBar темы -->
+        <item name="colorPrimary">#1A5AAD</item>
+        <item name="colorPrimaryVariant">#1A5AAD</item>
+        <item name="android:statusBarColor">#1A5AAD</item>
+    </style>
+    
+    <!-- Стили для AppBar в темной теме -->
+    <style name="Theme.Emo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">#1A5AAD</item>
+        <item name="android:background">#1A5AAD</item>
+    </style>
+</resources>

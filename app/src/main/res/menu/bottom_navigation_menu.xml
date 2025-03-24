@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/FirstFragment"
+        android:icon="@drawable/ic_mood"
+        android:title="Настроение" />
+    <item
+        android:id="@+id/ChartsFragment"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="Графики состояния" />
+    <item
+        android:id="@+id/TestsFragment"
+        android:icon="@drawable/ic_tests"
+        android:title="Тесты" />
+    <item
+        android:id="@+id/AiPsychologistFragment"
+        android:icon="@drawable/ic_ai"
+        android:title="ИИ-психолог" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="Выйти" />
+
+</menu> 

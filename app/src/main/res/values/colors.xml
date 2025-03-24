@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#2A63F6</color>
+    <color name="positive_color">#4CAF50</color>
+    <color name="negative_color">#D32F2F</color>
+    <color name="calculate_button_background">#FFC107</color>
+    <color name="calculate_button_text">#000000</color>
+    <color name="card_background">#F5F5F5</color>
+
+    <color name="text_color">#212121</color>
+    <color name="button_background">#E0E0E0</color>
+    <color name="button_pressed">#B0B0B0</color>
+    <color name="button_zero">#1976D2</color> <!-- Темнее синий -->
+    <color name="button_positive">#4CAF50</color> <!-- Темнее зеленый -->
+    <color name="button_negative">#D32F2F</color> <!-- Более темный оттенок красного для светлой темы -->
+    <color name="background_color">#FAFAFA</color>
+
+    <!-- Цвета для настроения -->
+    <color name="mood_very_bad">#D32F2F</color> <!-- Красный для очень плохого настроения -->
+    <color name="mood_bad">#FF6600</color>
+    <color name="mood_neutral">#FFCC00</color>
+    <color name="mood_good">#99CC00</color>
+    <color name="mood_very_good">#009900</color>
+
+    <color name="chart_background">#FFFFFF</color> <!-- White background for the chart in light mode -->
+    <color name="chart_grid_color">#D3D3D3</color> <!-- Light gray grid lines -->
+    <color name="chart_text_color">#000000</color> <!-- Black text for labels -->
+    <color name="chart_wellbeing_line">#2A63F6</color> <!-- Blue for wellbeing -->
+    <color name="chart_activity_line">#4CAF50</color> <!-- Green for activity -->
+    <color name="chart_mood_line">#FFCC00</color> <!-- Yellow for mood -->
+</resources>

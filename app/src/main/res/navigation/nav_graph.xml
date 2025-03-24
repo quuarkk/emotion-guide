@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/FirstFragment">
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.example.emo.FirstFragment"
+        android:label="Оценка настроения"
+        tools:layout="@layout/fragment_first">
+        <action
+            android:id="@+id/action_FirstFragment_to_ChartsFragment"
+            app:destination="@id/ChartsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/TestsFragment"
+        android:name="com.example.emo.TestsFragment"
+        android:label="Психологические тесты"
+        tools:layout="@layout/fragment_tests" />
+
+    <fragment
+        android:id="@+id/AiPsychologistFragment"
+        android:name="com.example.emo.AiPsychologistFragment"
+        android:label="ИИ-психолог"
+        tools:layout="@layout/fragment_ai_psychologist" />
+    <fragment
+        android:id="@+id/ChartsFragment"
+        android:name="com.example.emo.ChartsFragment"
+        android:label="Графики"
+        tools:layout="@layout/fragment_charts" />
+</navigation>
