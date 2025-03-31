@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Базовая тема приложения для темного режима -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <item name="colorPrimary">#1A5AAD</item> <!-- Более темный синий для темной темы -->
+        <item name="colorSecondary">#1A5AAD</item>
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="colorPrimaryVariant">#1A5AAD</item>
+        <item name="android:statusBarColor">#1A5AAD</item>
+    </style>
+    
+    <!-- Остальные стили наследуются из основного файла styles.xml -->
+</resources>

@@ -1,31 +1,37 @@
 package com.example.emo;
 
-import android.content.res.ColorStateList;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.SeekBar;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.emo.databinding.FragmentFirstBinding;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-import android.graphics.PorterDuff;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Date;
+import java.util.List;
 
 public class FirstFragment extends Fragment {
 
     private FragmentFirstBinding binding;
-    private ImageView moodEmoji;
-    private TextView moodTextView;
-    private SeekBar moodSeekBar;
+    private SanAdapter adapter;
+    private List<SanQuestion> questions;
+    private static final String TAG = "FirstFragment";
 
     @Override
     public View onCreateView(
@@ -36,111 +42,186 @@ public class FirstFragment extends Fragment {
         return binding.getRoot();
     }
 
+    @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        try {
-            // Инициализация компонентов
-            moodEmoji = binding.moodEmoji;
-            moodTextView = binding.moodTextView;
-            moodSeekBar = binding.moodSeekBar;
+        // Инициализация списка вопросов САН
+        questions = initializeQuestions();
 
-            // Установка максимального значения SeekBar на 6 (для диапазона от -3 до 3)
-            moodSeekBar.setMax(6);
-            
-            // Установка начального значения в центр (3 соответствует 0 на нашей шкале)
-            moodSeekBar.setProgress(3);
-            updateMoodUI(0); // Начальное значение 0 (нейтральное)
+        // Настройка RecyclerView
+        RecyclerView recyclerView = binding.sanRecyclerView;
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        adapter = new SanAdapter(questions) {
+            @Override
+            public void onBindViewHolder(@NonNull SanViewHolder holder, int position) {
+                super.onBindViewHolder(holder, position);
+                updateProgress(); // Обновляем прогресс при изменении SeekBar
+            }
+        };
+        recyclerView.setAdapter(adapter);
 
-            // Обработчик изменения настроения
-            moodSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
-                @Override
-                public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                    // Преобразуем значение прогресса (0-6) в диапазон от -3 до 3
-                    int moodValue = progress - 3;
-                    updateMoodUI(moodValue);
-                }
+        // Анимация появления списка
+        recyclerView.setAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
 
-                @Override
-                public void onStartTrackingTouch(SeekBar seekBar) {
-                    // Не используется
-                }
-
-                @Override
-                public void onStopTrackingTouch(SeekBar seekBar) {
-                    // Не используется
-                }
-            });
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        // Кнопка расчета
+        Button calculateButton = binding.calculateButton;
+        calculateButton.setOnClickListener(v -> {
+            calculateAndDisplayState(null); // Передаем null, так как resultTextView больше не нужен
+        });
     }
 
-    private void updateMoodUI(int moodValue) {
-        // Определяем настроение на основе значения ползунка (от -3 до 3)
-        String mood;
-        int colorResId;
-        int emojiResId;
+    private List<SanQuestion> initializeQuestions() {
+        List<SanQuestion> questionList = new ArrayList<>();
+        questionList.add(new SanQuestion("Самочувствие хорошее", "Самочувствие плохое")); // Инвертирован
+        questionList.add(new SanQuestion("Чувствую себя сильным", "Чувствую себя слабым")); // Инвертирован
+        questionList.add(new SanQuestion("Активный", "Пассивный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Подвижный", "Малоподвижный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Веселый", "Грустный")); // Инвертирован
+        questionList.add(new SanQuestion("Хорошее настроение", "Плохое настроение")); // Инвертирован
+        questionList.add(new SanQuestion("Работоспособный", "Разбитый")); // Инвертирован
+        questionList.add(new SanQuestion("Полный сил", "Обессиленный")); // Инвертирован
+        questionList.add(new SanQuestion("Быстрый", "Медлительный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Деятельный", "Бездеятельный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Счастливый", "Несчастный")); // Инвертирован
+        questionList.add(new SanQuestion("Жизнерадостный", "Мрачный")); // Инвертирован
+        questionList.add(new SanQuestion("Расслабленный", "Напряженный")); // Инвертирован
+        questionList.add(new SanQuestion("Здоровый", "Больной")); // Инвертирован
+        questionList.add(new SanQuestion("Увлеченный", "Безучастный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Заинтересованный", "Равнодушный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Восторженный", "Унылый")); // Инвертирован
+        questionList.add(new SanQuestion("Радостный", "Печальный")); // Инвертирован
+        questionList.add(new SanQuestion("Отдохнувший", "Усталый")); // Инвертирован
+        questionList.add(new SanQuestion("Свежий", "Изнуренный")); // Инвертирован
+        questionList.add(new SanQuestion("Возбужденный", "Сонливый")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Желание работать", "Желание отдохнуть")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Спокойный", "Взволнованный")); // Инвертирован
+        questionList.add(new SanQuestion("Оптимистичный", "Пессимистичный")); // Инвертирован
+        questionList.add(new SanQuestion("Выносливый", "Утомляемый")); // Инвертирован
+        questionList.add(new SanQuestion("Бодрый", "Вялый")); // Инвертирован
+        questionList.add(new SanQuestion("Соображать легко", "Соображать трудно")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Внимательный", "Рассеянный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Полный надежд", "Разочарованный")); // Инвертирован
+        questionList.add(new SanQuestion("Довольный", "Недовольный")); // Инвертирован
+        return questionList;
+    }
 
-        if (moodValue == -3) {
-            mood = "Очень плохо";
-            colorResId = R.color.mood_very_bad;
-            emojiResId = R.drawable.very_bad__3;
-        } else if (moodValue == -2) {
-            mood = "Плохо";
-            colorResId = R.color.mood_bad;
-            emojiResId = R.drawable.badly__2;
-        } else if (moodValue == -1) {
-            mood = "Грустно";
-            colorResId = R.color.mood_neutral;
-            emojiResId = R.drawable.little_bad__1;
-        } else if (moodValue == 0) {
-            mood = "Нейтрально";
-            colorResId = R.color.mood_neutral;
-            emojiResId = R.drawable.neutral_0;
-        } else if (moodValue == 1) {
-            mood = "Нормально";
-            colorResId = R.color.mood_good;
-            emojiResId = R.drawable.fine_1;
-        } else if (moodValue == 2) {
-            mood = "Хорошо";
-            colorResId = R.color.mood_good;
-            emojiResId = R.drawable.joyful_2;
-        } else if (moodValue == 3) {
-            mood = "Отлично";
-            colorResId = R.color.mood_very_good;
-            emojiResId = R.drawable.great_3;
+    private void updateProgress() {
+        int completed = 0;
+        for (SanQuestion question : questions) {
+            if (question.getScore() != 3) { // Считаем измененные значения (не нейтральные)
+                completed++;
+            }
+        }
+        binding.progressBar.setProgress(completed);
+    }
+
+    private void calculateAndDisplayState(TextView resultTextView) {
+        // Проверяем авторизацию
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Toast.makeText(getContext(), "Пожалуйста, войдите в аккаунт", Toast.LENGTH_LONG).show();
+            // Переходим к экрану логина
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            getActivity().finish();
+            return;
+        }
+
+        int[] wellbeingIndices = {0, 1, 6, 7, 12, 13, 18, 19, 24, 25};
+        int[] activityIndices = {2, 3, 8, 9, 14, 15, 20, 21, 26, 27};
+        int[] moodIndices = {4, 5, 10, 11, 16, 17, 22, 23, 28, 29};
+
+        float wellbeingScore = calculateCategoryScore(wellbeingIndices);
+        float activityScore = calculateCategoryScore(activityIndices);
+        float moodScore = calculateCategoryScore(moodIndices);
+
+        // Сохранение результатов в Firebase
+        saveTestResult(wellbeingScore, activityScore, moodScore);
+
+        // Показываем SecondFragment как диалог
+        SecondFragment dialog = new SecondFragment();
+        Bundle args = new Bundle();
+        args.putFloat("wellbeing_score", wellbeingScore);
+        args.putFloat("activity_score", activityScore);
+        args.putFloat("mood_score", moodScore);
+        args.putString("interpretation", interpretState(wellbeingScore, activityScore, moodScore));
+        dialog.setArguments(args);
+        dialog.show(getParentFragmentManager(), "SecondFragment");
+    }
+
+    private void saveTestResult(float wellbeingScore, float activityScore, float moodScore) {
+        String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
+        DatabaseReference testResultsRef = FirebaseDatabase.getInstance("https://emotions-guide-c173c-default-rtdb.europe-west1.firebasedatabase.app/")
+                .getReference()
+                .child("Users")
+                .child(userId)
+                .child("TestResults");
+
+        // Создаём новый результат теста
+        TestResult result = new TestResult(wellbeingScore, activityScore, moodScore, new Date().getTime());
+        String resultId = testResultsRef.push().getKey(); // Генерируем уникальный ключ для результата
+
+        Log.d(TAG, "Сохранение результата: wellbeing=" + wellbeingScore + ", activity=" + activityScore + ", mood=" + moodScore);
+
+        testResultsRef.child(resultId).setValue(result)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Результат теста успешно сохранён: " + resultId);
+                    Toast.makeText(getContext(), "Результат сохранён!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Ошибка сохранения результата теста: " + e.getMessage());
+                    Toast.makeText(getContext(), "Ошибка сохранения: " + e.getMessage(), Toast.LENGTH_LONG).show();
+                });
+    }
+
+    private float calculateCategoryScore(int[] indices) {
+        int sum = 0;
+        for (int index : indices) {
+            int rawScore = questions.get(index).getScore(); // -3...3
+            int adjustedScore = -rawScore + 4; // 3 → 1, -3 → 7
+            sum += adjustedScore; // 1-7
+        }
+        return sum / 10.0f;
+    }
+
+    private String interpretState(float wellbeing, float activity, float mood) {
+        StringBuilder state = new StringBuilder();
+
+        // Средний балл по всем категориям
+        float overallScore = (wellbeing + activity + mood) / 3.0f;
+
+        // Основная интерпретация по общему баллу
+        if (overallScore >= 5.0) {
+            state.append("Отличное состояние! \uD83C\uDF1F\nВы чувствуете себя бодро, активно и в хорошем настроении.");
+        } else if (overallScore >= 4.0) {
+            state.append("Нормальное состояние \uD83D\uDE42\nВ целом вы в порядке, но есть над чем поработать.");
+        } else if (overallScore >= 3.0) {
+            state.append("Переменчивое состояние \uD83C\uDF25️\nВаше самочувствие, активность и настроение нестабильны.");
         } else {
-            // Значение по умолчанию
-            mood = "Нейтрально";
-            colorResId = R.color.mood_neutral;
-            emojiResId = R.drawable.neutral_0;
+            state.append("Плохое состояние \uD83D\uDE1F\nВы чувствуете усталость, пассивность или подавленность.");
         }
 
-        // Изменим формат отображения текста, чтобы показывать реальное значение от -3 до 3
-        moodTextView.setText(String.format("%s (%d)", mood, moodValue));
-        int color = ContextCompat.getColor(requireContext(), colorResId);
-        moodTextView.setTextColor(color);
-
-        // Изменяем цвет ползунка без использования рефлексии
-        moodSeekBar.getProgressDrawable().setColorFilter(color, PorterDuff.Mode.SRC_IN);
-
-        // Для Android 6.0+ можно использовать этот метод вместо рефлексии
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            moodSeekBar.getThumb().setColorFilter(color, PorterDuff.Mode.SRC_IN);
+        // Учет соотношения между показателями
+        state.append("\n\nДетали:\n");
+        if (wellbeing < 4.0 && activity < 4.0 && mood >= 4.0) {
+            state.append("- Несмотря на хорошее настроение, ваше физическое состояние и активность низкие. Возможно, стоит отдохнуть.");
+        } else if (wellbeing >= 4.0 && activity >= 4.0 && mood < 4.0) {
+            state.append("- Вы физически в порядке и активны, но настроение подкачало. Попробуйте найти что-то вдохновляющее!");
+        } else if (wellbeing < 4.0 && activity >= 4.0 && mood < 4.0) {
+            state.append("- Вы активны, но самочувствие и настроение оставляют желать лучшего. Не перегружайте себя.");
+        } else if (Math.abs(wellbeing - activity) > 1.5 || Math.abs(wellbeing - mood) > 1.5 || Math.abs(activity - mood) > 1.5) {
+            state.append("- Ваши показатели сильно различаются. Это может указывать на внутренний дисбаланс.");
+        } else {
+            state.append("- Ваши показатели сбалансированы, что говорит о гармоничном состоянии.");
         }
 
-        // Обновление смайлика в зависимости от настроения
-        moodEmoji.setImageResource(emojiResId);
-        setEmojiSize(0.5f); // Стандартный размер для всех эмодзи
-    }
+        // Рекомендации
+        state.append("\n\nРекомендации:\n");
+        if (wellbeing < 4.0) state.append("- Позаботьтесь о здоровье: отдых, питание, сон.\n");
+        if (activity < 4.0) state.append("- Добавьте движения: прогулка или легкая зарядка.\n");
+        if (mood < 4.0) state.append("- Поднимите настроение: музыка, хобби, общение.\n");
+        if (overallScore >= 5.0) state.append("- Продолжайте в том же духе!\n");
 
-    private void setEmojiSize(float scale) {
-        ViewGroup.LayoutParams params = moodEmoji.getLayoutParams();
-        int baseSize = (int) (150 * getResources().getDisplayMetrics().density);
-        params.width = (int) (baseSize * scale);
-        params.height = (int) (baseSize * scale);
-        moodEmoji.setLayoutParams(params);
+        return state.toString();
     }
 
     @Override

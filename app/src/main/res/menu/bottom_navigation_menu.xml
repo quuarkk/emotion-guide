@@ -5,6 +5,10 @@
         android:icon="@drawable/ic_mood"
         android:title="Настроение" />
     <item
+        android:id="@+id/ChartsFragment"
+        android:icon="@android:drawable/ic_menu_recent_history"
+        android:title="Графики состояния" />
+    <item
         android:id="@+id/TestsFragment"
         android:icon="@drawable/ic_tests"
         android:title="Тесты" />
@@ -12,4 +16,9 @@
         android:id="@+id/AiPsychologistFragment"
         android:icon="@drawable/ic_ai"
         android:title="ИИ-психолог" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:title="Выйти" />
+
 </menu> 

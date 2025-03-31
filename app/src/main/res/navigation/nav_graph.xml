@@ -8,23 +8,13 @@
     <fragment
         android:id="@+id/FirstFragment"
         android:name="com.example.emo.FirstFragment"
-        android:label="@string/first_fragment_label"
+        android:label="Оценка настроения"
         tools:layout="@layout/fragment_first">
-
         <action
-            android:id="@+id/action_FirstFragment_to_SecondFragment"
-            app:destination="@id/SecondFragment" />
+            android:id="@+id/action_FirstFragment_to_ChartsFragment"
+            app:destination="@id/ChartsFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/SecondFragment"
-        android:name="com.example.emo.SecondFragment"
-        android:label="@string/second_fragment_label"
-        tools:layout="@layout/fragment_second">
 
-        <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
-            app:destination="@id/FirstFragment" />
-    </fragment>
     <fragment
         android:id="@+id/TestsFragment"
         android:name="com.example.emo.TestsFragment"
@@ -36,4 +26,9 @@
         android:name="com.example.emo.AiPsychologistFragment"
         android:label="ИИ-психолог"
         tools:layout="@layout/fragment_ai_psychologist" />
+    <fragment
+        android:id="@+id/ChartsFragment"
+        android:name="com.example.emo.ChartsFragment"
+        android:label="Графики"
+        tools:layout="@layout/fragment_charts" />
 </navigation>

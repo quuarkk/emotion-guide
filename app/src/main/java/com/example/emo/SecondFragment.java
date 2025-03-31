@@ -4,43 +4,62 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import androidx.annotation.NonNull;
-import androidx.fragment.app.Fragment;
-import androidx.navigation.fragment.NavHostFragment;
-
+import androidx.annotation.Nullable;
+import androidx.fragment.app.DialogFragment;
 import com.example.emo.databinding.FragmentSecondBinding;
 
-public class SecondFragment extends Fragment {
+public class SecondFragment extends DialogFragment {
 
     private FragmentSecondBinding binding;
 
+    @Nullable
     @Override
-    public View onCreateView(
-            @NonNull LayoutInflater inflater, ViewGroup container,
-            Bundle savedInstanceState
-    ) {
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         binding = FragmentSecondBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
-    public void onViewCreated(@NonNull View view, Bundle savedInstanceState) {
+    @Override
+
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Получаем значение настроения из аргументов (если есть)
-        if (getArguments() != null && getArguments().containsKey("mood_value")) {
-            int moodValue = getArguments().getInt("mood_value");
-            binding.textviewSecond.setText("Ваше настроение: " + moodValue + "/10");
+        // Настройка размеров и фона диалога
+        if (getDialog() != null && getDialog().getWindow() != null) {
+            getDialog().getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            getDialog().getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         }
 
-        binding.buttonSecond.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                // Вместо использования действия, просто переходим к FirstFragment
-                NavHostFragment.findNavController(SecondFragment.this)
-                        .navigate(R.id.FirstFragment);
-            }
-        });
+        // Получаем данные из аргументов и отображаем результаты
+        if (getArguments() != null) {
+            float wellbeingScore = getArguments().getFloat("wellbeing_score", 0f);
+            float activityScore = getArguments().getFloat("activity_score", 0f);
+            float moodScore = getArguments().getFloat("mood_score", 0f);
+            String interpretation = getArguments().getString("interpretation", "Нет данных");
+
+            String result = String.format(
+                    "\uD83D\uDC99 Самочувствие: %.1f\n" +
+                            "\uD83D\uDC9A Активность: %.1f\n" +
+                            "\uD83D\uDC9B Настроение: %.1f\n\n" +
+                            "Ваше состояние:\n%s",
+                    wellbeingScore, activityScore, moodScore, interpretation
+            );
+            binding.textviewSecond.setText(result);
+        } else {
+            binding.textviewSecond.setText("Ошибка: данные не переданы");
+        }
+
+        // Закрытие диалога по кнопке "Назад"
+        binding.buttonSecond.setOnClickListener(v -> dismiss());
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (getDialog() != null) {
+            getDialog().setCanceledOnTouchOutside(true); // Закрытие при нажатии вне области
+        }
     }
 
     @Override
@@ -48,5 +67,4 @@ public class SecondFragment extends Fragment {
         super.onDestroyView();
         binding = null;
     }
-
 }
