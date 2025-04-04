@@ -100,17 +100,17 @@ public class AiPsychologistFragment extends Fragment {
         if (!isNetworkAvailable()) {
             chatMessages.add(new ChatMessage("Отсутствует подключение к интернету. Пожалуйста, проверьте ваше соединение и попробуйте снова.", false));
             chatAdapter.notifyItemInserted(chatMessages.size() - 1);
-            chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+            chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
             return;
         }
 
-        // Показываем индикатор загрузки
-        progressBar.setVisibility(View.VISIBLE);
+        // Не показываем индикатор загрузки, так как у нас есть анимация "Анализирую..."
+        // progressBar.setVisibility(View.VISIBLE);
         
         // Добавляем сообщение о начале анализа
         chatMessages.add(new ChatMessage("Анализирую ваши результаты...", false));
         chatAdapter.notifyItemInserted(chatMessages.size() - 1);
-        chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+        chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
         
         // Получаем имя пользователя
         FirebaseDataManager.getUserName()
@@ -167,35 +167,34 @@ public class AiPsychologistFragment extends Fragment {
 
                 Log.d(TAG, "Отправка запроса к API с системным промптом");
                 
+                // Устанавливаем слушатель для потоковых обновлений
+                ApiClient.setStreamListener(partialResponse -> {
+                    requireActivity().runOnUiThread(() -> {
+                        // Обновляем сообщение о статусе с частичным ответом
+                        updateStatusMessage(partialResponse);
+                    });
+                });
+                
                 // Отправляем запрос к API
                 ApiClient.sendChatRequest(systemPrompt, jsonData)
                         .thenAccept(response -> {
                             Log.d(TAG, "Получен ответ от API");
                             requireActivity().runOnUiThread(() -> {
-                                // Скрываем индикатор загрузки
-                                progressBar.setVisibility(View.GONE);
-
-                                // Удаляем сообщение о статусе анализа
-                                for (int i = chatMessages.size() - 1; i >= 0; i--) {
-                                    ChatMessage chatMessage = chatMessages.get(i);
-                                    if (!chatMessage.isUser() && chatMessage.getText().contains("Анализирую")) {
-                                        chatMessages.remove(i);
-                                        chatAdapter.notifyItemRemoved(i);
-                                        break;
-                                    }
-                                }
-
-                                // Добавляем ответ ИИ в чат
-                                chatMessages.add(new ChatMessage(response, false));
-                                chatAdapter.notifyItemInserted(chatMessages.size() - 1);
-                                // Прокручиваем к последнему сообщению
-                                chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+                                // Не нужно скрывать индикатор загрузки
+                                // progressBar.setVisibility(View.GONE);
+                                
+                                // Финальное обновление уже произошло через StreamListener,
+                                // поэтому не нужно добавлять новое сообщение
+                                
+                                // Прокручиваем к последнему сообщению без анимации
+                                chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
                             });
                         })
                         .exceptionally(e -> {
                             Log.e(TAG, "Ошибка при получении ответа от API", e);
                             requireActivity().runOnUiThread(() -> {
-                                progressBar.setVisibility(View.GONE);
+                                // Не нужно скрывать индикатор загрузки
+                                // progressBar.setVisibility(View.GONE);
                                 
                                 // Получаем основное сообщение об ошибке
                                 String errorMessage = e.getMessage();
@@ -227,7 +226,8 @@ public class AiPsychologistFragment extends Fragment {
             .exceptionally(e -> {
                 Log.e(TAG, "Error analyzing test results", e);
                 requireActivity().runOnUiThread(() -> {
-                    progressBar.setVisibility(View.GONE);
+                    // Не нужно скрывать индикатор загрузки
+                    // progressBar.setVisibility(View.GONE);
                     chatMessages.add(new ChatMessage("Произошла ошибка при получении данных: " + e.getMessage() + 
                             "\n\nПопробуйте перезапустить приложение или проверить подключение к интернету.", false));
                     chatAdapter.notifyItemInserted(chatMessages.size() - 1);
@@ -332,29 +332,35 @@ public class AiPsychologistFragment extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        // Отменяем все активные запросы при выходе из фрагмента
+        // Отменяем все активные запросы и удаляем слушатель
+        ApiClient.setStreamListener(null);
         ApiClient.cancelAllRequests();
     }
 
-    // Добавьте этот метод в класс AiPsychologistFragment для обновления сообщения о статусе
+    // Обновляем метод для правильной работы с потоковыми ответами
     private void updateStatusMessage(String message) {
         requireActivity().runOnUiThread(() -> {
             // Находим последнее сообщение от ИИ
+            boolean messageUpdated = false;
             for (int i = chatMessages.size() - 1; i >= 0; i--) {
                 ChatMessage chatMessage = chatMessages.get(i);
-                if (!chatMessage.isUser() && chatMessage.getText().contains("Анализирую")) {
+                if (!chatMessage.isUser()) {
                     // Обновляем сообщение
                     chatMessages.set(i, new ChatMessage(message, false));
                     chatAdapter.notifyItemChanged(i);
-                    chatRecyclerView.smoothScrollToPosition(i);
-                    return;
+                    // Не прокручиваем к сообщению при каждом обновлении
+                    messageUpdated = true;
+                    break;
                 }
             }
             
             // Если не нашли сообщение для обновления, добавляем новое
-            chatMessages.add(new ChatMessage(message, false));
-            chatAdapter.notifyItemInserted(chatMessages.size() - 1);
-            chatRecyclerView.smoothScrollToPosition(chatMessages.size() - 1);
+            if (!messageUpdated) {
+                chatMessages.add(new ChatMessage(message, false));
+                chatAdapter.notifyItemInserted(chatMessages.size() - 1);
+                // Прокручиваем к новому сообщению без анимации
+                chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
+            }
         });
     }
 } 

@@ -74,6 +74,7 @@ public class FirebaseDataManager {
         }
     }
 
+    // Метод для получения результатов тестов пользователя (только последние 5)
     public static CompletableFuture<List<TestResult>> getUserTestResults() {
         CompletableFuture<List<TestResult>> future = new CompletableFuture<>();
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -90,7 +91,8 @@ public class FirebaseDataManager {
                 .child(TEST_RESULTS_PATH);
         
         // Устанавливаем таймаут для запроса
-        testResultsRef.addListenerForSingleValueEvent(new ValueEventListener() {
+        testResultsRef.limitToLast(5) // Ограничиваем до 5 последних тестов
+                .addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 List<TestResult> results = new ArrayList<>();

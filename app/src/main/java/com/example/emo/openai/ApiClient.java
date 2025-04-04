@@ -3,9 +3,12 @@ package com.example.emo.openai;
 import android.util.Log;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
@@ -41,6 +44,39 @@ public class ApiClient {
     
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
 
+    // Интерфейс для обновления частичного ответа
+    public interface StreamListener {
+        void onPartialResponse(String partialResponse);
+    }
+    
+    private static StreamListener streamListener;
+    
+    public static void setStreamListener(StreamListener listener) {
+        streamListener = listener;
+    }
+    
+    // Для анимации "думающей" нейросети
+    private static int dotCount = 0;
+    private static final String[] thinkingAnimation = {".", "..", "..."};
+    private static long lastAnimationUpdateTime = 0;
+    private static final long ANIMATION_DELAY_MS = 300; // Задержка между сменой анимации (800 мс)
+    
+    private static String getThinkingAnimation() {
+        long currentTime = System.currentTimeMillis();
+        // Обновляем анимацию только если прошло достаточно времени
+        if (currentTime - lastAnimationUpdateTime > ANIMATION_DELAY_MS) {
+            dotCount = (dotCount + 1) % thinkingAnimation.length;
+            lastAnimationUpdateTime = currentTime;
+        }
+        return "Анализирую ваши результаты" + thinkingAnimation[dotCount];
+    }
+    
+    private static void updatePartialResponse(String partialResponse) {
+        if (streamListener != null) {
+            streamListener.onPartialResponse(partialResponse);
+        }
+    }
+
     public static CompletableFuture<String> sendChatRequest(String systemPrompt, String userMessage) {
         // Создаем счетчик попыток
         AtomicInteger retryCount = new AtomicInteger(0);
@@ -60,6 +96,8 @@ public class ApiClient {
             // Формируем тело запроса
             JSONObject data = new JSONObject();
             data.put("model", MODEL);
+            data.put("max_tokens", 100000); // Ограничение на количество токенов
+            data.put("stream", true); // Включаем потоковую генерацию
 
             JSONArray messages = new JSONArray();
 
@@ -119,66 +157,138 @@ public class ApiClient {
 
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    try (ResponseBody responseBody = response.body()) {
-                        if (!response.isSuccessful()) {
-                            String errorBody = responseBody != null ? responseBody.string() : "Неизвестная ошибка";
-                            Log.e(TAG, "Ошибка API: " + response.code() + " - " + errorBody);
-                            
-                            // Специальная обработка для ошибки 504
-                            if (response.code() == 504) {
-                                // Проверяем, можно ли повторить запрос
-                                if (retryCount.incrementAndGet() <= MAX_RETRIES) {
-                                    Log.d(TAG, "Повторная попытка " + retryCount.get() + "/" + MAX_RETRIES + " после ошибки 504");
-                                    // Небольшая задержка перед повторной попыткой
-                                    executor.execute(() -> {
-                                        try {
-                                            Thread.sleep(2000 * retryCount.get()); // Увеличиваем задержку с каждой попыткой
-                                            sendChatRequestWithRetry(systemPrompt, userMessage, future, retryCount);
-                                        } catch (InterruptedException ie) {
-                                            Thread.currentThread().interrupt();
-                                            future.completeExceptionally(new Exception("Ошибка API: " + response.code() + 
-                                                    (errorBody.length() > 0 ? " - " + errorBody : "")));
-                                        }
-                                    });
-                                } else {
-                                    future.completeExceptionally(new Exception(
-                                            "Сервер не отвечает (ошибка 504) после " + MAX_RETRIES + " попыток. Это может быть вызвано:\n" +
-                                            "1. Перегрузкой сервера\n" +
-                                            "2. Медленным интернет-соединением\n" +
-                                            "3. Временными проблемами с API\n\n" +
-                                            "Пожалуйста, попробуйте позже или используйте другое подключение к интернету."));
-                                }
+                    if (!response.isSuccessful()) {
+                        String errorBody = response.body() != null ? response.body().string() : "Неизвестная ошибка";
+                        Log.e(TAG, "Ошибка API: " + response.code() + " - " + errorBody);
+                        
+                        // Специальная обработка для ошибки 504
+                        if (response.code() == 504) {
+                            // Проверяем, можно ли повторить запрос
+                            if (retryCount.incrementAndGet() <= MAX_RETRIES) {
+                                Log.d(TAG, "Повторная попытка " + retryCount.get() + "/" + MAX_RETRIES + " после ошибки 504");
+                                // Небольшая задержка перед повторной попыткой
+                                executor.execute(() -> {
+                                    try {
+                                        Thread.sleep(2000 * retryCount.get()); // Увеличиваем задержку с каждой попыткой
+                                        sendChatRequestWithRetry(systemPrompt, userMessage, future, retryCount);
+                                    } catch (InterruptedException ie) {
+                                        Thread.currentThread().interrupt();
+                                        future.completeExceptionally(new Exception("Ошибка API: " + response.code() + 
+                                                (errorBody.length() > 0 ? " - " + errorBody : "")));
+                                    }
+                                });
                             } else {
-                                future.completeExceptionally(new Exception("Ошибка API: " + response.code() + 
-                                        (errorBody.length() > 0 ? " - " + errorBody : "")));
+                                future.completeExceptionally(new Exception(
+                                        "Сервер не отвечает (ошибка 504) после " + MAX_RETRIES + " попыток. Это может быть вызвано:\n" +
+                                        "1. Перегрузкой сервера\n" +
+                                        "2. Медленным интернет-соединением\n" +
+                                        "3. Временными проблемами с API\n\n" +
+                                        "Пожалуйста, попробуйте позже или используйте другое подключение к интернету."));
                             }
-                            return;
-                        }
-                        
-                        if (responseBody == null) {
-                            future.completeExceptionally(new Exception("Пустой ответ от сервера"));
-                            return;
-                        }
-                        
-                        String responseString = responseBody.string();
-                        Log.d(TAG, "Получен ответ от API: " + responseString.substring(0, Math.min(100, responseString.length())) + "...");
-                        
-                        JSONObject responseJson = new JSONObject(responseString);
-                        String content = responseJson.getJSONArray("choices")
-                                .getJSONObject(0)
-                                .getJSONObject("message")
-                                .getString("content");
-
-                        // Обработка формата ответа (если есть тег </think>)
-                        String[] parts = content.split("</think>\n\n");
-                        if (parts.length > 1) {
-                            future.complete(parts[1]); // Возвращаем только видимую часть ответа
                         } else {
-                            future.complete(content);
+                            future.completeExceptionally(new Exception("Ошибка API: " + response.code() + 
+                                    (errorBody.length() > 0 ? " - " + errorBody : "")));
                         }
-                    } catch (Exception e) {
-                        Log.e(TAG, "Ошибка при обработке ответа", e);
+                        return;
+                    }
+                    
+                    ResponseBody responseBody = response.body();
+                    if (responseBody == null) {
+                        future.completeExceptionally(new Exception("Пустой ответ от сервера"));
+                        return;
+                    }
+                    
+                    // Для потоковой обработки
+                    StringBuilder fullResponse = new StringBuilder();
+                    StringBuilder currentChunk = new StringBuilder();
+                    
+                    try {
+                        // Получаем поток данных
+                        BufferedReader reader = new BufferedReader(
+                                new InputStreamReader(responseBody.byteStream()));
+                        String line;
                         
+                        while ((line = reader.readLine()) != null) {
+                            if (line.isEmpty()) continue;
+                            
+                            // Пропускаем префикс "data: "
+                            if (line.startsWith("data: ")) {
+                                line = line.substring(6);
+                            }
+                            
+                            // Проверяем, не является ли это сообщением о завершении
+                            if (line.equals("[DONE]")) {
+                                break;
+                            }
+                            
+                            try {
+                                JSONObject chunk = new JSONObject(line);
+                                if (chunk.has("choices")) {
+                                    JSONArray choices = chunk.getJSONArray("choices");
+                                    if (choices.length() > 0) {
+                                        JSONObject choice = choices.getJSONObject(0);
+                                        if (choice.has("delta") && choice.getJSONObject("delta").has("content")) {
+                                            String content = choice.getJSONObject("delta").getString("content");
+                                            fullResponse.append(content);
+                                            currentChunk.append(content);
+                                            
+                                            // Отправляем обновление, когда накопилось достаточно текста
+                                            // или встретился знак пунктуации
+                                            if (currentChunk.length() > 10 || 
+                                                    content.matches(".*[.!?]\\s*$")) {
+                                                // Создаем промежуточный результат
+                                                String partialResult = fullResponse.toString();
+                                                
+                                                // Костыль для удаления рассуждений нейросети
+                                                // Удаляем всё от начала до </think> если есть
+                                                int thinkEndIndex = partialResult.indexOf("</think>");
+                                                if (thinkEndIndex != -1) {
+                                                    partialResult = partialResult.substring(thinkEndIndex + "</think>".length()).trim();
+                                                } else {
+                                                    // Если тег </think> не найден, проверяем наличие <think>
+                                                    int thinkStartIndex = partialResult.indexOf("<think>");
+                                                    if (thinkStartIndex != -1) {
+                                                        // Если есть только открывающий тег, показываем анимацию "думающей" нейросети
+                                                        partialResult = getThinkingAnimation();
+                                                    }
+                                                }
+                                                
+                                                // Отправляем промежуточное обновление через интерфейс
+                                                updatePartialResponse(partialResult);
+                                                currentChunk.setLength(0); // Сбрасываем текущий чанк
+                                            }
+                                        }
+                                    }
+                                }
+                            } catch (JSONException e) {
+                                Log.e(TAG, "Ошибка при разборе JSON чанка: " + line, e);
+                            }
+                        }
+                        
+                        // Обрабатываем полный ответ
+                        String finalResponse = fullResponse.toString();
+                        
+                        // Костыль для удаления рассуждений нейросети в финальном ответе
+                        int thinkEndIndex = finalResponse.indexOf("</think>");
+                        if (thinkEndIndex != -1) {
+                            finalResponse = finalResponse.substring(thinkEndIndex + "</think>".length()).trim();
+                        } else {
+                            // Если тег </think> не найден, проверяем наличие <think>
+                            int thinkStartIndex = finalResponse.indexOf("<think>");
+                            if (thinkStartIndex != -1) {
+                                // Если есть только открывающий тег, удаляем всё до конца текста
+                                finalResponse = finalResponse.substring(0, thinkStartIndex).trim();
+                                if (finalResponse.isEmpty()) {
+                                    // Если после удаления ничего не осталось, возвращаем сообщение
+                                    finalResponse = "Извините, не удалось получить ответ. Пожалуйста, попробуйте еще раз.";
+                                }
+                            }
+                        }
+                        
+                        future.complete(finalResponse);
+                        
+                    } catch (Exception e) {
+                        Log.e(TAG, "Ошибка при обработке потокового ответа", e);
                         // Проверяем, можно ли повторить запрос
                         if (retryCount.incrementAndGet() <= MAX_RETRIES) {
                             Log.d(TAG, "Повторная попытка " + retryCount.get() + "/" + MAX_RETRIES + " после ошибки обработки");
@@ -196,6 +306,8 @@ public class ApiClient {
                             future.completeExceptionally(new Exception("Ошибка при обработке ответа после " + 
                                     MAX_RETRIES + " попыток: " + e.getMessage()));
                         }
+                    } finally {
+                        responseBody.close();
                     }
                 }
             });

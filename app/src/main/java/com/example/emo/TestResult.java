@@ -7,6 +7,7 @@ public class TestResult {
     private float activityScore;
     private float moodScore;
     private long timestamp; // Время прохождения теста в миллисекундах
+    private String interpretation;
 
     // Пустой конструктор для Firebase
     public TestResult() {
@@ -49,5 +50,13 @@ public class TestResult {
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
+    }
+
+    public String getInterpretation() {
+        return interpretation;
+    }
+
+    public void setInterpretation(String interpretation) {
+        this.interpretation = interpretation;
     }
 }

@@ -186,21 +186,53 @@
             android:singleLine="true"
             android:imeOptions="actionNext"/>
     </LinearLayout>
+            <LinearLayout
+                android:id="@+id/terms_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="50dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginEnd="50dp"
+                android:orientation="horizontal"
+                android:descendantFocusability="blocksDescendants"
+                app:layout_constraintTop_toBottomOf="@id/confirm_password_lin"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent">
 
-    <Button
-        android:id="@+id/sign_up_btn"
-        android:layout_width="268dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
-        android:layout_marginBottom="30dp"
-        android:backgroundTint="@color/blue"
-        android:fontFamily="@font/ubuntu_light"
-        android:text="Регистрация"
-        android:textColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/confirm_password_lin" />
+            <CheckBox
+                android:id="@+id/terms_checkbox"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical" />
+
+            <TextView
+                android:id="@+id/terms_text"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/terms_accept"
+                android:textColor="@color/text_color"
+                android:layout_gravity="center_vertical"
+                android:maxLines="3"
+                android:ellipsize="end"
+                android:scrollHorizontally="false"
+                android:singleLine="false"
+                android:lines="2" />
+        </LinearLayout>
+            <Button
+                android:id="@+id/sign_up_btn"
+                android:layout_width="268dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="30dp"
+                android:backgroundTint="@color/blue"
+                android:fontFamily="@font/ubuntu_light"
+                android:text="Регистрация"
+                android:textColor="@color/white"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/terms_layout" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

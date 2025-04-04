@@ -6,6 +6,18 @@
     android:layout_height="match_parent"
     tools:context=".TestsFragment">
 
+<!--    <TextView-->
+<!--        android:id="@+id/textview_tests"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="16dp"-->
+<!--        android:text="Психологические тесты"-->
+<!--        android:textSize="24sp"-->
+<!--        android:textStyle="bold"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toTopOf="parent" />-->
+
     <ScrollView
         android:layout_width="0dp"
         android:layout_height="0dp"
