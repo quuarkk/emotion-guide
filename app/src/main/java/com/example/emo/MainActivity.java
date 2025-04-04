@@ -3,9 +3,6 @@ package com.example.emo;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.view.GravityCompat;
@@ -62,7 +59,10 @@ public class MainActivity extends AppCompatActivity {
                 Log.d(TAG, "Нажат элемент меню с id: " + id);
 
                 try {
-                    if (id == R.id.FirstFragment) {
+                    if (id == R.id.ProfileActivity) {
+                        Log.d(TAG, "Переход к ProfileActivity");
+                        startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                    } else if (id == R.id.FirstFragment) {
                         Log.d(TAG, "Переход к FirstFragment");
                         navController.navigate(R.id.FirstFragment);
                         // Изменяем заголовок для FirstFragment
@@ -86,7 +86,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } catch (Exception e) {
                     Log.e(TAG, "Ошибка при навигации: " + e.getMessage());
-                    Toast.makeText(MainActivity.this, "Ошибка навигации: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                     return false;
                 }
 
@@ -97,7 +96,7 @@ public class MainActivity extends AppCompatActivity {
             // Логирование навигации и обновление заголовка
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
                 Log.d(TAG, "Навигация к: " + destination.getLabel() + ", id: " + destination.getId());
-                
+
                 // Устанавливаем заголовок в зависимости от фрагмента
                 if (destination.getId() == R.id.FirstFragment) {
                     if (getSupportActionBar() != null) {
@@ -110,22 +109,6 @@ public class MainActivity extends AppCompatActivity {
             Log.e(TAG, "Ошибка в onCreate: " + e.getMessage());
             e.printStackTrace();
         }
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_settings) {
-            return true;
-        }
-        return NavigationUI.onNavDestinationSelected(item, navController)
-                || super.onOptionsItemSelected(item);
     }
 
     @Override
