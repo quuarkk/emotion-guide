@@ -70,16 +70,6 @@
                     android:textColor="@color/text_color"
                     android:textSize="16sp" />
             </LinearLayout>
-
-            <!-- Иконка карандаша -->
-            <ImageButton
-                android:id="@+id/edit_profile_btn"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:background="@android:color/transparent"
-                android:src="@android:drawable/ic_menu_edit"
-                android:contentDescription="Редактировать профиль" />
         </LinearLayout>
 
         <!-- Дата регистрации -->
@@ -111,6 +101,22 @@
             android:textColor="@color/white" />
 
     </LinearLayout>
+
+    <!-- Иконка карандаша, перемещённая в верхний правый угол -->
+    <ImageButton
+        android:id="@+id/edit_profile_btn"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_gravity="top|end"
+        android:layout_marginTop="?attr/actionBarSize"
+        android:layout_marginEnd="16dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/edit_pencil"
+        android:scaleType="centerInside"
+        android:scaleX="0.7"
+        android:scaleY="0.7"
+        android:contentDescription="Редактировать профиль"
+        app:tint="@color/blue" />
 
     <ProgressBar
         android:id="@+id/progressBar"

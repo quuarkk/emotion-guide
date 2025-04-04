@@ -13,7 +13,7 @@
     <color name="calculate_button_background">#FFC107</color>
     <color name="calculate_button_text">#000000</color>
     <color name="card_background">#F5F5F5</color>
-
+    <color name="custom_blue">#0000FF</color>
     <color name="text_color">#212121</color>
     <color name="button_background">#E0E0E0</color>
     <color name="button_pressed">#B0B0B0</color>

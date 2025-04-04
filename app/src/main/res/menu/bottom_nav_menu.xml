@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/ProfileActivity"
-        android:icon="@android:drawable/ic_menu_manage"
+        android:icon="@drawable/personal_office"
         android:title="Личный кабинет" />
     <item
         android:id="@+id/navigation_mood"
