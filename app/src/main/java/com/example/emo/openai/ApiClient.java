@@ -62,13 +62,9 @@ public class ApiClient {
     private static final long ANIMATION_DELAY_MS = 300; // Задержка между сменой анимации (800 мс)
     
     private static String getThinkingAnimation() {
-        long currentTime = System.currentTimeMillis();
-        // Обновляем анимацию только если прошло достаточно времени
-        if (currentTime - lastAnimationUpdateTime > ANIMATION_DELAY_MS) {
-            dotCount = (dotCount + 1) % thinkingAnimation.length;
-            lastAnimationUpdateTime = currentTime;
-        }
-        return "Анализирую ваши результаты" + thinkingAnimation[dotCount];
+        // Теперь возвращаем фиксированное сообщение без точек,
+        // так как анимация будет отображаться через полосу загрузки
+        return "Анализирую ваши результаты";
     }
     
     private static void updatePartialResponse(String partialResponse) {

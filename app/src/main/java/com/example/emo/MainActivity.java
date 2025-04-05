@@ -112,6 +112,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+        // Дополнительная проверка аутентификации при возвращении к активности
+        if (FirebaseAuth.getInstance().getCurrentUser() == null) {
+            Log.w(TAG, "Пользователь не авторизован в onStart, перенаправление на LoginActivity");
+            startActivity(new Intent(MainActivity.this, LoginActivity.class));
+            finish(); // Закрываем MainActivity, чтобы пользователь не мог вернуться назад
+        }
+    }
+
+    @Override
     public boolean onSupportNavigateUp() {
         return NavigationUI.navigateUp(navController, appBarConfiguration)
                 || super.onSupportNavigateUp();

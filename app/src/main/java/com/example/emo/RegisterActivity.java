@@ -43,6 +43,15 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Проверка, если пользователь уже авторизован
+        if (FirebaseAuth.getInstance().getCurrentUser() != null) {
+            Log.d(TAG, "Пользователь уже авторизован, перенаправление на MainActivity");
+            startActivity(new Intent(RegisterActivity.this, MainActivity.class));
+            finish(); // Закрываем RegisterActivity
+            return; // Прекращаем выполнение onCreate
+        }
+
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 

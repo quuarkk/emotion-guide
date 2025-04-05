@@ -1,5 +1,7 @@
 package com.example.emo;
 
+import static com.example.emo.R.id.message_progress;
+
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -12,11 +14,14 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.example.emo.databinding.FragmentAiPsychologistBinding;
 import com.example.emo.firebase.FirebaseDataManager;
@@ -107,8 +112,18 @@ public class AiPsychologistFragment extends Fragment {
         // Не показываем индикатор загрузки, так как у нас есть анимация "Анализирую..."
         // progressBar.setVisibility(View.VISIBLE);
         
+        // Проверяем, есть ли уже сообщение "Анализирую" и удаляем его
+        for (int i = chatMessages.size() - 1; i >= 0; i--) {
+            ChatMessage message = chatMessages.get(i);
+            if (!message.isUser() && message.getText().startsWith("Анализирую")) {
+                chatMessages.remove(i);
+                chatAdapter.notifyItemRemoved(i);
+                break;
+            }
+        }
+        
         // Добавляем сообщение о начале анализа
-        chatMessages.add(new ChatMessage("Анализирую ваши результаты...", false));
+        chatMessages.add(new ChatMessage("Анализирую ваши результаты", false));
         chatAdapter.notifyItemInserted(chatMessages.size() - 1);
         chatRecyclerView.scrollToPosition(chatMessages.size() - 1);
         
@@ -150,7 +165,6 @@ public class AiPsychologistFragment extends Fragment {
                             "2. Оценить динамику изменений при наличии нескольких тестов " +
                             "3. Выявить показатели ниже нормы и предложить: " +
                             "- Соматические практики (дыхание, расслабление) " +
-                            "- Психообразовательные материалы " +
                             "- План поэтапного улучшения " +
 
                             // Травма-ориентированная работа
@@ -160,8 +174,8 @@ public class AiPsychologistFragment extends Fragment {
                             "- Работать с негативными убеждениями через когнитивные реструктуризации " +
 
                             // Формат ответа
-                            "Ответ структурировать как: " +
-                            "А) Краткий анализ тестов с визуализацией прогресса (эмодзи/шкалы) " +
+                            "Ответ структурировать как очень дружелюбный психолог, который помогает пользователю понять свои результаты тестов: " +
+                            "А) Краткий анализ тестов с визуализацией прогресса эмодзи " +
                             "Б) 1-2 конкретные рекомендации с привязкой к показателям ";
                 }
 
@@ -258,7 +272,7 @@ public class AiPsychologistFragment extends Fragment {
     
     // Класс для представления сообщения в чате
     public static class ChatMessage {
-        private final String text;
+        private String text;
         private final boolean isUser;
 
         public ChatMessage(String text, boolean isUser) {
@@ -268,6 +282,10 @@ public class AiPsychologistFragment extends Fragment {
 
         public String getText() {
             return text;
+        }
+        
+        public void setText(String text) {
+            this.text = text;
         }
 
         public boolean isUser() {
@@ -297,20 +315,74 @@ public class AiPsychologistFragment extends Fragment {
             
             // Применяем Markdown форматирование к тексту сообщения
             if (!message.isUser()) {
-                markwon.setMarkdown(holder.messageText, message.getText());
-                // Включаем поддержку кликабельных ссылок
-                holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+                // Установка текста без перерисовки всего элемента
+                if (holder.messageText.getTag() == null || !holder.messageText.getTag().equals(message.getText())) {
+                    markwon.setMarkdown(holder.messageText, message.getText());
+                    // Сохраняем текущий текст как тег, чтобы предотвратить ненужные обновления
+                    holder.messageText.setTag(message.getText());
+                    // Включаем поддержку кликабельных ссылок
+                    holder.messageText.setMovementMethod(LinkMovementMethod.getInstance());
+                }
+                
+                // Отображаем полосу загрузки только для сообщения "Анализирую результаты..."
+                if (message.getText().startsWith("Анализирую")) {
+                    holder.messageProgress.setVisibility(View.VISIBLE);
+                } else {
+                    holder.messageProgress.setVisibility(View.GONE);
+                }
             } else {
-            holder.messageText.setText(message.getText());
+                if (holder.messageText.getTag() == null || !holder.messageText.getTag().equals(message.getText())) {
+                    holder.messageText.setText(message.getText());
+                    holder.messageText.setTag(message.getText());
+                }
+                // Для сообщений пользователя всегда скрываем прогресс-бар
+                holder.messageProgress.setVisibility(View.GONE);
             }
             
             // Настройка внешнего вида в зависимости от отправителя
-            if (message.isUser()) {
-                holder.messageText.setBackgroundResource(R.drawable.bg_user_message);
-                holder.messageText.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+            // Выполняем только один раз при создании ViewHolder
+            if (holder.isStyleApplied == null || !holder.isStyleApplied) {
+                // Получаем родительский контейнер (LinearLayout)
+                View parentContainer = (View) holder.messageText.getParent();
+                
+                if (message.isUser()) {
+                    // Применяем стиль к родительскому контейнеру
+                    parentContainer.setBackgroundResource(R.drawable.bg_user_message);
+                    holder.messageText.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_END);
+                    parentContainer.setLayoutDirection(View.LAYOUT_DIRECTION_RTL);
+                } else {
+                    // Применяем стиль к родительскому контейнеру
+                    parentContainer.setBackgroundResource(R.drawable.bg_ai_message);
+                    holder.messageText.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                    parentContainer.setLayoutDirection(View.LAYOUT_DIRECTION_LTR);
+                }
+                holder.isStyleApplied = true;
+            }
+        }
+
+        @Override
+        public void onBindViewHolder(@NonNull ChatViewHolder holder, int position, @NonNull List<Object> payloads) {
+            if (payloads.isEmpty()) {
+                // Если нет специальных данных, вызываем стандартный метод
+                super.onBindViewHolder(holder, position, payloads);
             } else {
-                holder.messageText.setBackgroundResource(R.drawable.bg_ai_message);
-                holder.messageText.setTextAlignment(View.TEXT_ALIGNMENT_TEXT_START);
+                // Обновляем только текст без перерисовки фона и других элементов
+                for (Object payload : payloads) {
+                    if (payload instanceof String) {
+                        String newText = (String) payload;
+                        if (holder.messageText.getTag() == null || !holder.messageText.getTag().equals(newText)) {
+                            markwon.setMarkdown(holder.messageText, newText);
+                            holder.messageText.setTag(newText);
+                        }
+                        
+                        // Обновляем видимость прогресс-бара в зависимости от текста сообщения
+                        if (newText.startsWith("Анализирую")) {
+                            holder.messageProgress.setVisibility(View.VISIBLE);
+                        } else {
+                            holder.messageProgress.setVisibility(View.GONE);
+                        }
+                    }
+                }
             }
         }
 
@@ -321,11 +393,59 @@ public class AiPsychologistFragment extends Fragment {
 
         class ChatViewHolder extends RecyclerView.ViewHolder {
             TextView messageText;
+            ProgressBar messageProgress;
+            Boolean isStyleApplied = false;
 
             ChatViewHolder(View itemView) {
                 super(itemView);
                 messageText = itemView.findViewById(R.id.message_text);
+                messageProgress = itemView.findViewById(message_progress);
             }
+        }
+        
+        // Метод для эффективного обновления списка сообщений
+        public void updateMessages(List<ChatMessage> newMessages) {
+            DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(new ChatMessageDiffCallback(messages, newMessages));
+            messages.clear();
+            messages.addAll(newMessages);
+            diffResult.dispatchUpdatesTo(this);
+        }
+    }
+
+    // DiffUtil для эффективного обновления RecyclerView
+    private class ChatMessageDiffCallback extends DiffUtil.Callback {
+        private final List<ChatMessage> oldMessages;
+        private final List<ChatMessage> newMessages;
+
+        public ChatMessageDiffCallback(List<ChatMessage> oldMessages, List<ChatMessage> newMessages) {
+            this.oldMessages = oldMessages;
+            this.newMessages = newMessages;
+        }
+
+        @Override
+        public int getOldListSize() {
+            return oldMessages.size();
+        }
+
+        @Override
+        public int getNewListSize() {
+            return newMessages.size();
+        }
+
+        @Override
+        public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
+            // Для упрощения - считаем элементы одинаковыми если они имеют одинаковый индекс
+            // В более сложных случаях здесь может быть ID или другой уникальный идентификатор
+            return oldItemPosition == newItemPosition;
+        }
+
+        @Override
+        public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
+            ChatMessage oldMessage = oldMessages.get(oldItemPosition);
+            ChatMessage newMessage = newMessages.get(newItemPosition);
+            
+            return oldMessage.isUser() == newMessage.isUser() && 
+                   oldMessage.getText().equals(newMessage.getText());
         }
     }
 
@@ -345,10 +465,26 @@ public class AiPsychologistFragment extends Fragment {
             for (int i = chatMessages.size() - 1; i >= 0; i--) {
                 ChatMessage chatMessage = chatMessages.get(i);
                 if (!chatMessage.isUser()) {
-                    // Обновляем сообщение
-                    chatMessages.set(i, new ChatMessage(message, false));
-                    chatAdapter.notifyItemChanged(i);
-                    // Не прокручиваем к сообщению при каждом обновлении
+                    // Обновляем только текст сообщения без создания нового объекта
+                    chatMessage.setText(message);
+                    
+                    // Обновляем только текст без полной перерисовки элемента
+                    RecyclerView.ViewHolder holder = chatRecyclerView.findViewHolderForAdapterPosition(i);
+                    if (holder != null && holder instanceof ChatAdapter.ChatViewHolder) {
+                        ChatAdapter.ChatViewHolder chatViewHolder = (ChatAdapter.ChatViewHolder) holder;
+                        if (chatViewHolder.messageText.getTag() == null || !chatViewHolder.messageText.getTag().equals(message)) {
+                            markwon.setMarkdown(chatViewHolder.messageText, message);
+                            chatViewHolder.messageText.setTag(message);
+                        }
+                        
+                        // Обновляем видимость прогресс-бара
+                        boolean isAnalyzing = message.startsWith("Анализирую");
+                        chatViewHolder.messageProgress.setVisibility(isAnalyzing ? View.VISIBLE : View.GONE);
+                    } else {
+                        // Используем более эффективный частичный способ обновления
+                        chatAdapter.notifyItemChanged(i, message);
+                    }
+                    
                     messageUpdated = true;
                     break;
                 }
