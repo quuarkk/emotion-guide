@@ -1,12 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Базовая тема приложения -->
     <style name="AppTheme" parent="Theme.MaterialComponents.DayNight.NoActionBar">
-        <item name="colorPrimary">#4A90E2</item>
-        <item name="colorSecondary">#4A90E2</item>
+        <item name="colorPrimary">#A3BFFA</item>
+        <item name="colorSecondary">#C3D7FF</item>
         <item name="android:windowBackground">@color/background_color</item>
-        <item name="colorPrimaryVariant">#4A90E2</item>
-        <item name="android:statusBarColor">#4A90E2</item>
+        <item name="colorPrimaryVariant">#7F9CF5</item>
+        <item name="android:statusBarColor">#A3BFFA</item> <!-- Исправляем на #A3BFFA -->
     </style>
     <style name="AppButton" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/text_color</item>
@@ -18,6 +16,6 @@
         <item name="android:windowNoTitle">true</item>
     </style>
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">18sp</item> <!-- Уменьшаем размер шрифта -->
+        <item name="android:textSize">18sp</item>
     </style>
 </resources>

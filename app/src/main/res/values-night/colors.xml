@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="purple_200">#FFBB86FC</color>
     <color name="purple_500">#FF6200EE</color>
@@ -7,7 +6,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="blue">#2A63F6</color>
+    <color name="blue">#A3BFFA</color> <!-- Нежный голубой -->
     <color name="positive_color">#4CAF50</color>
     <color name="negative_color">#FF5252</color>
     <color name="calculate_button_background">#FFC107</color>
@@ -16,21 +15,20 @@
     <color name="text_color">#FFFFFF</color>
     <color name="button_background">#616161</color>
     <color name="button_pressed">#424242</color>
-    <color name="button_zero">#1976D2</color>
+    <color name="button_zero">#6B7280</color> <!-- Глубокий серо-голубой -->
     <color name="button_positive">#4CAF50</color>
     <color name="button_negative">#FF5252</color>
     <color name="background_color">#121212</color>
     <color name="mood_very_bad">#FF5252</color>
-    <color name="mood_bad">#FF6600</color>
+    <color name="mood_bad">#A3BFFA</color> <!-- Нежный голубой -->
     <color name="mood_neutral">#FFCC00</color>
     <color name="mood_good">#99CC00</color>
     <color name="mood_very_good">#009900</color>
 
-    <!-- Chart-specific colors for dark mode -->
-    <color name="chart_background">#212121</color> <!-- Dark gray background for the chart in dark mode -->
-    <color name="chart_grid_color">#616161</color> <!-- Lighter gray grid lines -->
-    <color name="chart_text_color">#FFFFFF</color> <!-- White text for labels -->
-    <color name="chart_wellbeing_line">#42A5F5</color> <!-- Lighter blue for wellbeing -->
-    <color name="chart_activity_line">#66BB6A</color> <!-- Lighter green for activity -->
-    <color name="chart_mood_line">#FFEE58</color> <!-- Lighter yellow for mood -->
+    <color name="chart_background">#212121</color>
+    <color name="chart_grid_color">#616161</color>
+    <color name="chart_text_color">#FFFFFF</color>
+    <color name="chart_wellbeing_line">#C3D7FF</color> <!-- Очень светлый голубой вместо #42A5F5 -->
+    <color name="chart_activity_line">#66BB6A</color>
+    <color name="chart_mood_line">#FFEE58</color>
 </resources>

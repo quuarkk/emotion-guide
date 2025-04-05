@@ -1,6 +1,9 @@
 package com.example.emo;
 
+import android.content.res.ColorStateList;
+import android.graphics.Typeface;
 import android.os.Bundle;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.emo.databinding.FragmentTestsBinding;
@@ -1001,49 +1005,73 @@ public class TestsFragment extends Fragment {
         options.add("7");
         return options;
     }
-    
+
     private void displayTestCategories() {
         testsContainer.removeAllViews();
-        
+
+        boolean isFirstCategory = true; // Флаг для первой категории
+
+        // Извлекаем цвет colorPrimary из темы
+        TypedValue typedValue = new TypedValue();
+        requireContext().getTheme().resolveAttribute(android.R.attr.colorPrimary, typedValue, true);
+        int colorPrimary = typedValue.data;
+
         for (Map.Entry<String, List<Test>> entry : testCategories.entrySet()) {
             String category = entry.getKey();
             List<Test> tests = entry.getValue();
-            
-            // Создаем заголовок категории
+
+            // Заголовок категории
             TextView categoryTitle = new TextView(requireContext());
             categoryTitle.setText(category);
-            categoryTitle.setTextSize(18);
-            categoryTitle.setPadding(0, 16, 0, 8);
+            categoryTitle.setTextSize(20);
+            categoryTitle.setTypeface(null, Typeface.BOLD);
+            categoryTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color));
+            // Уменьшаем верхний отступ для первой категории
+            if (isFirstCategory) {
+                categoryTitle.setPadding(16, 8, 16, 12);
+                isFirstCategory = false;
+            } else {
+                categoryTitle.setPadding(16, 24, 16, 12);
+            }
             testsContainer.addView(categoryTitle);
-            
+
             // Добавляем тесты этой категории
             for (Test test : tests) {
                 CardView cardView = new CardView(requireContext());
-                cardView.setCardElevation(4);
-                cardView.setRadius(8);
+                cardView.setCardElevation(8);
+                cardView.setRadius(12);
                 cardView.setUseCompatPadding(true);
-                
+                cardView.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.card_background));
+
                 LinearLayout cardContent = new LinearLayout(requireContext());
                 cardContent.setOrientation(LinearLayout.VERTICAL);
-                cardContent.setPadding(16, 16, 16, 16);
-                
+                cardContent.setPadding(24, 24, 24, 24);
+
                 TextView testTitle = new TextView(requireContext());
                 testTitle.setText(test.getTitle());
                 testTitle.setTextSize(16);
-                
+                testTitle.setTypeface(null, Typeface.BOLD);
+                testTitle.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color));
+
                 TextView testDescription = new TextView(requireContext());
                 testDescription.setText(test.getDescription());
                 testDescription.setTextSize(14);
+                testDescription.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_color));
                 testDescription.setPadding(0, 8, 0, 16);
-                
+
                 Button startButton = new Button(requireContext());
                 startButton.setText("Пройти тест");
+                // Устанавливаем цвет фона кнопки, соответствующий colorPrimary
+                startButton.setBackgroundTintList(ColorStateList.valueOf(colorPrimary));
+
+                startButton.setTextSize(16);
+                startButton.setPadding(24, 0, 24, 0);
                 startButton.setOnClickListener(v -> startTest(test));
-                
+
                 cardContent.addView(testTitle);
                 cardContent.addView(testDescription);
                 cardContent.addView(startButton);
-                
+
                 cardView.addView(cardContent);
                 testsContainer.addView(cardView);
             }

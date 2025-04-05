@@ -22,7 +22,6 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -52,13 +51,7 @@ public class FirstFragment extends Fragment {
         // Настройка RecyclerView
         RecyclerView recyclerView = binding.sanRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new SanAdapter(questions) {
-            @Override
-            public void onBindViewHolder(@NonNull SanViewHolder holder, int position) {
-                super.onBindViewHolder(holder, position);
-                updateProgress(); // Обновляем прогресс при изменении SeekBar
-            }
-        };
+        adapter = new SanAdapter(questions); // Удаляем вызов updateProgress
         recyclerView.setAdapter(adapter);
 
         // Анимация появления списка
@@ -75,45 +68,35 @@ public class FirstFragment extends Fragment {
         List<SanQuestion> questionList = new ArrayList<>();
         questionList.add(new SanQuestion("Самочувствие хорошее", "Самочувствие плохое")); // Инвертирован
         questionList.add(new SanQuestion("Чувствую себя сильным", "Чувствую себя слабым")); // Инвертирован
-        questionList.add(new SanQuestion("Активный", "Пассивный")); // Не инвертирован, вернули исходный порядок
-        questionList.add(new SanQuestion("Подвижный", "Малоподвижный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Активный", "Пассивный")); // Не инвертирован
+        questionList.add(new SanQuestion("Подвижный", "Малоподвижный")); // Не инвертирован
         questionList.add(new SanQuestion("Веселый", "Грустный")); // Инвертирован
         questionList.add(new SanQuestion("Хорошее настроение", "Плохое настроение")); // Инвертирован
         questionList.add(new SanQuestion("Работоспособный", "Разбитый")); // Инвертирован
         questionList.add(new SanQuestion("Полный сил", "Обессиленный")); // Инвертирован
-        questionList.add(new SanQuestion("Быстрый", "Медлительный")); // Не инвертирован, вернули исходный порядок
-        questionList.add(new SanQuestion("Деятельный", "Бездеятельный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Быстрый", "Медлительный")); // Не инвертирован
+        questionList.add(new SanQuestion("Деятельный", "Бездеятельный")); // Не инвертирован
         questionList.add(new SanQuestion("Счастливый", "Несчастный")); // Инвертирован
         questionList.add(new SanQuestion("Жизнерадостный", "Мрачный")); // Инвертирован
         questionList.add(new SanQuestion("Расслабленный", "Напряженный")); // Инвертирован
         questionList.add(new SanQuestion("Здоровый", "Больной")); // Инвертирован
-        questionList.add(new SanQuestion("Увлеченный", "Безучастный")); // Не инвертирован, вернули исходный порядок
-        questionList.add(new SanQuestion("Заинтересованный", "Равнодушный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Увлеченный", "Безучастный")); // Не инвертирован
+        questionList.add(new SanQuestion("Заинтересованный", "Равнодушный")); // Не инвертирован
         questionList.add(new SanQuestion("Восторженный", "Унылый")); // Инвертирован
         questionList.add(new SanQuestion("Радостный", "Печальный")); // Инвертирован
         questionList.add(new SanQuestion("Отдохнувший", "Усталый")); // Инвертирован
         questionList.add(new SanQuestion("Свежий", "Изнуренный")); // Инвертирован
-        questionList.add(new SanQuestion("Возбужденный", "Сонливый")); // Не инвертирован, вернули исходный порядок
-        questionList.add(new SanQuestion("Желание работать", "Желание отдохнуть")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Возбужденный", "Сонливый")); // Не инвертирован
+        questionList.add(new SanQuestion("Желание работать", "Желание отдохнуть")); // Не инвертирован
         questionList.add(new SanQuestion("Спокойный", "Взволнованный")); // Инвертирован
         questionList.add(new SanQuestion("Оптимистичный", "Пессимистичный")); // Инвертирован
         questionList.add(new SanQuestion("Выносливый", "Утомляемый")); // Инвертирован
         questionList.add(new SanQuestion("Бодрый", "Вялый")); // Инвертирован
-        questionList.add(new SanQuestion("Соображать легко", "Соображать трудно")); // Не инвертирован, вернули исходный порядок
-        questionList.add(new SanQuestion("Внимательный", "Рассеянный")); // Не инвертирован, вернули исходный порядок
+        questionList.add(new SanQuestion("Соображать легко", "Соображать трудно")); // Не инвертирован
+        questionList.add(new SanQuestion("Внимательный", "Рассеянный")); // Не инвертирован
         questionList.add(new SanQuestion("Полный надежд", "Разочарованный")); // Инвертирован
         questionList.add(new SanQuestion("Довольный", "Недовольный")); // Инвертирован
         return questionList;
-    }
-
-    private void updateProgress() {
-        int completed = 0;
-        for (SanQuestion question : questions) {
-            if (question.getScore() != 3) { // Считаем измененные значения (не нейтральные)
-                completed++;
-            }
-        }
-        binding.progressBar.setProgress(completed);
     }
 
     private void calculateAndDisplayState(TextView resultTextView) {
@@ -214,10 +197,10 @@ public class FirstFragment extends Fragment {
             state.append("- Ваши показатели сбалансированы, что говорит о гармоничном состоянии.");
         }
 
-// Рекомендации
+        // Рекомендации
         state.append("\n\nРекомендации:\n");
 
-// Общие рекомендации на основе среднего балла
+        // Общие рекомендации на основе среднего балла
         if (overallScore >= 5.5) {
             state.append("- Вы в отличной форме! \uD83C\uDF1F Продолжайте поддерживать баланс между активностью, отдыхом и позитивным настроем.\n");
             state.append("- Попробуйте поставить себе новую цель: например, освоить новый навык или попробовать новый вид спорта.\n");
@@ -235,7 +218,7 @@ public class FirstFragment extends Fragment {
             state.append("- Сделайте паузу: выпейте тёплый чай, включите спокойную музыку и позвольте себе отдохнуть.\n");
         }
 
-// Рекомендации по самочувствию (wellbeing)
+        // Рекомендации по самочувствию (wellbeing)
         if (wellbeing < 2.5) {
             state.append("- Ваше самочувствие требует внимания. \uD83C\uDFE5 Постарайтесь отдохнуть: лягте на 15 минут с закрытыми глазами, дышите медленно и глубоко.\n");
             state.append("- Проверьте, достаточно ли вы пьёте воды — обезвоживание может усиливать усталость.\n");
@@ -249,7 +232,7 @@ public class FirstFragment extends Fragment {
             state.append("- Отличное самочувствие! \uD83D\uDCAA Поддерживайте его, соблюдая режим дня и питание.\n");
         }
 
-// Рекомендации по активности (activity)
+        // Рекомендации по активности (activity)
         if (activity < 2.5) {
             state.append("- Уровень активности очень низкий. \uD83D\uDEB6 Начните с малого: сделайте 10-минутную прогулку на свежем воздухе.\n");
             state.append("- Попробуйте простые упражнения: потянитесь или сделайте несколько приседаний.\n");
@@ -263,7 +246,7 @@ public class FirstFragment extends Fragment {
             state.append("- Вы полны энергии! \uD83C\uDFC3 Поддерживайте активность, чередуя разные виды нагрузок.\n");
         }
 
-// Рекомендации по настроению (mood)
+        // Рекомендации по настроению (mood)
         if (mood < 2.5) {
             state.append("- Настроение на низком уровне. \uD83D\uDE22 Попробуйте посмотреть смешное видео или позвонить другу.\n");
             state.append("- Напишите 3 вещи, за которые вы благодарны сегодня — это поможет переключить мысли.\n");
@@ -277,7 +260,7 @@ public class FirstFragment extends Fragment {
             state.append("- Отличное настроение! \uD83D\uDE04 Делитесь позитивом с окружающими — это усилит ваше состояние.\n");
         }
 
-// Учёт комбинаций показателей
+        // Учёт комбинаций показателей
         if (wellbeing < 3.5 && activity >= 4.5) {
             state.append("- Вы активны, но самочувствие подкачало. \uD83D\uDEA7 Не перегружайте себя — добавьте больше отдыха между делами.\n");
         }
