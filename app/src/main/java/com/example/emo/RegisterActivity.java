@@ -194,9 +194,10 @@ public class RegisterActivity extends AppCompatActivity {
                                 Log.d(TAG, "createUserWithEmailAndPassword completed: " + task.isSuccessful());
                                 if (task.isSuccessful()) {
                                     Log.d(TAG, "Регистрация успешна, сохранение данных в FirebaseDatabase");
-                                    HashMap<String, String> userInfo = new HashMap<>();
+                                    HashMap<String, Object> userInfo = new HashMap<>(); // Изменяем тип на Object для гибкости
                                     userInfo.put("email", email);
                                     userInfo.put("username", username);
+                                    userInfo.put("termsAccepted", termsCheckbox.isChecked()); // Добавляем состояние чекбокса
 
                                     String userId = FirebaseAuth.getInstance().getCurrentUser().getUid();
                                     Log.d(TAG, "User ID: " + userId);
