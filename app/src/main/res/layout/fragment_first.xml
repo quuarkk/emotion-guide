@@ -30,6 +30,7 @@
 
     <Button
         android:id="@+id/calculateButton"
+        style="@style/AppButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:backgroundTint="@color/calculate_button_background"

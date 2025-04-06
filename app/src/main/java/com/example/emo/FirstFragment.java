@@ -25,7 +25,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-public class FirstFragment extends Fragment {
+// Реализуем listener адаптера
+public class FirstFragment extends Fragment implements SanAdapter.OnScoreSelectedListener {
 
     private FragmentFirstBinding binding;
     private SanAdapter adapter;
@@ -51,8 +52,14 @@ public class FirstFragment extends Fragment {
         // Настройка RecyclerView
         RecyclerView recyclerView = binding.sanRecyclerView;
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        adapter = new SanAdapter(questions); // Удаляем вызов updateProgress
+        // Используем конструктор по умолчанию
+        adapter = new SanAdapter();
+        // Устанавливаем listener
+        adapter.setOnScoreSelectedListener(this);
         recyclerView.setAdapter(adapter);
+
+        // Передаем начальный список через submitList
+        adapter.submitList(questions);
 
         // Анимация появления списка
         recyclerView.setAnimation(AnimationUtils.loadAnimation(getContext(), android.R.anim.fade_in));
@@ -97,6 +104,31 @@ public class FirstFragment extends Fragment {
         questionList.add(new SanQuestion("Полный надежд", "Разочарованный")); // Инвертирован
         questionList.add(new SanQuestion("Довольный", "Недовольный")); // Инвертирован
         return questionList;
+    }
+
+    // Реализация метода listener'а
+    @Override
+    public void onScoreSelected(int position, int score) {
+        if (position >= 0 && position < questions.size()) {
+            // 1. Создаем НОВЫЙ список
+            List<SanQuestion> updatedQuestions = new ArrayList<>(questions);
+
+            // 2. Получаем объект из НОВОГО списка и обновляем его
+            SanQuestion questionToUpdate = updatedQuestions.get(position);
+            // Создаем новый объект SanQuestion с обновленным score
+            // Это важно для DiffUtil, чтобы он корректно определил изменение
+            SanQuestion updatedQuestion = new SanQuestion(questionToUpdate.getPositivePole(), questionToUpdate.getNegativePole());
+            updatedQuestion.setScore(score);
+            updatedQuestions.set(position, updatedQuestion); // Заменяем старый объект новым
+
+            // 3. Обновляем поле questions фрагмента
+            this.questions = updatedQuestions;
+
+            // 4. Передаем НОВЫЙ список в адаптер
+            adapter.submitList(updatedQuestions);
+
+            Log.d(TAG, "Score updated at position " + position + " to " + score);
+        }
     }
 
     private void calculateAndDisplayState(TextView resultTextView) {

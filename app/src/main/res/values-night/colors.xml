@@ -9,7 +9,7 @@
     <color name="blue">#A3BFFA</color> <!-- Нежный голубой -->
     <color name="positive_color">#4CAF50</color>
     <color name="negative_color">#FF5252</color>
-    <color name="calculate_button_background">#FFC107</color>
+    <color name="calculate_button_background">#FFD54F</color>
     <color name="calculate_button_text">#000000</color>
     <color name="card_background">#424242</color>
     <color name="text_color">#FFFFFF</color>
@@ -24,7 +24,11 @@
     <color name="mood_neutral">#FFCC00</color>
     <color name="mood_good">#99CC00</color>
     <color name="mood_very_good">#009900</color>
-
+    <color name="resulting_button_color">#F06292</color>
+    <color name="san_answer_unselected">#455A64</color> <!-- Серый для невыбранных кнопок (тёмная тема) -->
+    <color name="san_answer_zero">#607D8B</color> <!-- Чуть светлее для кнопки "0" в тёмной теме -->
+    <color name="san_answer_selected_positive">#66BB6A</color> <!-- Зелёный для тёмной темы -->
+    <color name="san_answer_selected_negative">#ff5353</color> <!-- Красный для отрицательного -->
     <color name="chart_background">#212121</color>
     <color name="chart_grid_color">#616161</color>
     <color name="chart_text_color">#FFFFFF</color>

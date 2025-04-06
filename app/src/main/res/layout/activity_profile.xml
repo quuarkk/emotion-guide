@@ -14,11 +14,12 @@
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
+            android:layout_height="56dp"
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/Theme.Emo.PopupOverlay"
             app:title="Личный кабинет"
-            app:titleTextColor="@color/white" />
+            app:titleTextColor="@color/white"
+            app:titleTextAppearance="@style/Toolbar.TitleText"/>
     </com.google.android.material.appbar.AppBarLayout>
 
     <LinearLayout
@@ -93,10 +94,11 @@
         <!-- Кнопка сброса результатов теста -->
         <Button
             android:id="@+id/reset_test_results_btn"
+            style="@style/AppButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
-            android:backgroundTint="@android:color/holo_red_light"
+            android:backgroundTint="@color/resulting_button_color"
             android:text="Сбросить результаты теста САН"
             android:textColor="@color/white" />
 
