@@ -22,87 +22,92 @@
             app:titleTextAppearance="@style/Toolbar.TitleText"/>
     </com.google.android.material.appbar.AppBarLayout>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:orientation="vertical"
-        android:padding="16dp">
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!-- Контейнер для аватара, имени и email -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:padding="16dp">
 
-            <!-- Статичная картинка -->
-            <ImageView
-                android:id="@+id/avatar_iv"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:src="@drawable/cactus"
-                android:contentDescription="Аватар пользователя" />
-
-            <!-- Никнейм и email -->
+            <!-- Контейнер для аватара, имени и email -->
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="16dp"
-                android:orientation="vertical"
-                android:gravity="center_vertical">
+                android:orientation="horizontal"
+                android:padding="16dp">
 
-                <TextView
-                    android:id="@+id/username_tv"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Никнейм"
-                    android:textColor="@color/text_color"
-                    android:textSize="24sp"
-                    android:textStyle="bold" />
+                <!-- Статичная картинка -->
+                <ImageView
+                    android:id="@+id/avatar_iv"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:src="@drawable/cactus"
+                    android:contentDescription="Аватар пользователя" />
 
-                <TextView
-                    android:id="@+id/email_tv"
-                    android:layout_width="wrap_content"
+                <!-- Никнейм и email -->
+                <LinearLayout
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="email@example.com"
-                    android:textColor="@color/text_color"
-                    android:textSize="16sp" />
+                    android:layout_weight="1"
+                    android:layout_marginStart="16dp"
+                    android:orientation="vertical"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/username_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Никнейм"
+                        android:textColor="@color/text_color"
+                        android:textSize="24sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/email_tv"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:text="email@example.com"
+                        android:textColor="@color/text_color"
+                        android:textSize="16sp" />
+                </LinearLayout>
             </LinearLayout>
+
+            <!-- Дата регистрации -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="Дата регистрации"
+                android:textColor="@color/text_color"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/registration_date_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:hint="Дата регистрации"
+                android:textColor="@color/text_color"
+                android:textSize="14sp" />
+
+            <!-- Кнопка сброса результатов теста -->
+            <Button
+                android:id="@+id/reset_test_results_btn"
+                style="@style/AppButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/resulting_button_color"
+                android:text="Сбросить результаты теста САН"
+                android:textColor="@color/white" />
+
         </LinearLayout>
-
-        <!-- Дата регистрации -->
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Дата регистрации"
-            android:textColor="@color/text_color"
-            android:textSize="16sp" />
-
-        <TextView
-            android:id="@+id/registration_date_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:hint="Дата регистрации"
-            android:textColor="@color/text_color"
-            android:textSize="14sp" />
-
-        <!-- Кнопка сброса результатов теста -->
-        <Button
-            android:id="@+id/reset_test_results_btn"
-            style="@style/AppButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:backgroundTint="@color/resulting_button_color"
-            android:text="Сбросить результаты теста САН"
-            android:textColor="@color/white" />
-
-    </LinearLayout>
+    </ScrollView>
 
     <!-- Иконка карандаша, перемещённая в верхний правый угол -->
     <ImageButton

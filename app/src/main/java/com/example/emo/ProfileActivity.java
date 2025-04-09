@@ -379,4 +379,25 @@ public class ProfileActivity extends AppCompatActivity {
         finish();
         return true;
     }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        
+        if (id == android.R.id.home) {
+            onBackPressed();
+            return true;
+        } else if (id == R.id.FirstFragment ||
+                id == R.id.TestsFragment ||
+                id == R.id.AiPsychologistFragment ||
+                id == R.id.RelaxationFragment ||
+                id == R.id.ChartsFragment) {
+            Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
+            intent.putExtra("fragment_id", id);
+            startActivity(intent);
+            return true;
+        }
+        
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -5,23 +5,26 @@
         <item name="android:windowBackground">@color/background_color</item>
         <item name="colorPrimaryVariant">#7F9CF5</item>
         <item name="android:statusBarColor">#A3BFFA</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
     </style>
     <style name="AppButton" parent="Widget.MaterialComponents.Button">
         <item name="android:textColor">@color/text_color</item>
         <item name="cornerRadius">12dp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
-        <item name="android:textSize">16sp</item>
-        <item name="android:paddingHorizontal">24dp</item>
+        <item name="android:textSize">@dimen/text_size_normal</item>
+        <item name="android:paddingHorizontal">@dimen/padding_normal</item>
     </style>
     <style name="SanAnswerButton" parent="Widget.MaterialComponents.Button">
         <item name="cornerRadius">4dp</item>
         <item name="android:fontFamily">sans-serif</item>
         <item name="android:textStyle">normal</item>
         <item name="android:textSize">12sp</item>
-        <item name="android:padding">4dp</item>
-        <item name="android:layout_width">41dp</item>
-        <item name="android:layout_height">42dp</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:insetTop">0dp</item>
+        <item name="android:insetBottom">0dp</item>
+        <item name="android:insetLeft">0dp</item>
+        <item name="android:insetRight">0dp</item>
     </style>
     <style name="AppDialogTheme" parent="Theme.AppCompat.Light.Dialog">
         <item name="android:windowBackground">@android:color/transparent</item>

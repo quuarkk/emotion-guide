@@ -17,6 +17,10 @@
         android:icon="@drawable/ic_tests"
         android:title="Тесты" />
     <item
+        android:id="@+id/RelaxationFragment"
+        android:icon="@drawable/ic_relaxation"
+        android:title="Методики и релаксации" />
+    <item
         android:id="@+id/AiPsychologistFragment"
         android:icon="@drawable/ic_menu_help"
         android:title="ИИ-психолог" />

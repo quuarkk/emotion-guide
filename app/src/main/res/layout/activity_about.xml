@@ -10,7 +10,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/background_color">
+        android:background="?android:attr/colorBackground">
 
         <com.google.android.material.appbar.AppBarLayout
             android:layout_width="match_parent"
@@ -23,6 +23,7 @@
                 android:layout_height="56dp"
                 android:background="?attr/colorPrimary"
                 app:popupTheme="@style/Theme.Emo.PopupOverlay"
+                app:titleTextColor="?attr/colorOnPrimary"
                 app:titleTextAppearance="@style/Toolbar.TitleText"/>
 
         </com.google.android.material.appbar.AppBarLayout>
@@ -44,18 +45,21 @@
                     android:text="Контакты для связи:"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:layout_marginBottom="8dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Email: dementjew.vania2016@yandex.ru"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:layout_marginBottom="4dp"/>
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Telegram: https://t.me/dementiev_ivan"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:layout_marginBottom="16dp"/>
 
                 <TextView
@@ -64,12 +68,14 @@
                     android:text="Форма обратной связи:"
                     android:textSize="18sp"
                     android:textStyle="bold"
+                    android:textColor="?android:attr/textColorPrimary"
                     android:layout_marginBottom="8dp"/>
 
                 <WebView
                     android:id="@+id/feedbackForm"
                     android:layout_width="match_parent"
-                    android:layout_height="650dp"/>
+                    android:layout_height="650dp"
+                    android:background="?android:attr/colorBackground"/>
 
             </LinearLayout>
         </ScrollView>

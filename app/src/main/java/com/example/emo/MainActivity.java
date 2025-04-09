@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
             // Настройка AppBarConfiguration с учетом drawer
             appBarConfiguration = new AppBarConfiguration.Builder(
-                    R.id.FirstFragment, R.id.TestsFragment, R.id.AiPsychologistFragment, R.id.ChartsFragment, R.id.AboutActivity, R.id.ProfileActivity)
+                    R.id.FirstFragment, R.id.TestsFragment, R.id.AiPsychologistFragment, R.id.ChartsFragment, R.id.RelaxationFragment, R.id.AboutActivity, R.id.ProfileActivity)
                     .setOpenableLayout(drawer)
                     .build();
 
@@ -78,6 +78,9 @@ public class MainActivity extends AppCompatActivity {
                     } else if (id == R.id.ChartsFragment) {
                         Log.d(TAG, "Переход к ChartsFragment");
                         navController.navigate(R.id.ChartsFragment);
+                    } else if (id == R.id.RelaxationFragment) {
+                        Log.d(TAG, "Переход к RelaxationFragment");
+                        navController.navigate(R.id.RelaxationFragment);
                     } else if (id == R.id.AboutActivity) {
                         Log.d(TAG, "Переход к AboutActivity");
                         startActivity(new Intent(MainActivity.this, AboutActivity.class));

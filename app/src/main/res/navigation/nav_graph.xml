@@ -31,4 +31,9 @@
         android:name="com.example.emo.ChartsFragment"
         android:label="Графики"
         tools:layout="@layout/fragment_charts" />
+    <fragment
+        android:id="@+id/RelaxationFragment"
+        android:name="com.example.emo.RelaxationFragment"
+        android:label="Методики и релаксации"
+        tools:layout="@layout/fragment_relaxation" />
 </navigation>
