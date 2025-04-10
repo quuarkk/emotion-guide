@@ -3,20 +3,29 @@ package com.example.emo;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
+import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -30,6 +39,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.ValueEventListener;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.net.InetAddress;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -42,9 +53,11 @@ public class ProfileActivity extends AppCompatActivity {
     private static final String TAG = "ProfileActivity";
     private static final String PREFS_NAME = "user_prefs";
     private static final String KEY_USERNAME = "KEY_USERNAME";
+    private static final String KEY_AVATAR = "KEY_AVATAR";
     private TextView usernameTv, emailTv, registrationDateTv;
     private ImageButton editProfileBtn;
     private Button resetTestResultsBtn;
+    private ImageView avatarIv;
     private ProgressBar progressBar;
     private FirebaseAuth auth;
     private FirebaseUser currentUser;
@@ -54,6 +67,8 @@ public class ProfileActivity extends AppCompatActivity {
     private int retryCount = 0;
     private static final int MAX_RETRIES = 3;
     private static final long RETRY_DELAY_MS = 2000; // 2 секунды задержки между попытками
+
+    private ActivityResultLauncher<String> imagePickerLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +111,66 @@ public class ProfileActivity extends AppCompatActivity {
         registrationDateTv = findViewById(R.id.registration_date_tv);
         editProfileBtn = findViewById(R.id.edit_profile_btn);
         resetTestResultsBtn = findViewById(R.id.reset_test_results_btn);
+        avatarIv = findViewById(R.id.avatar_iv);
         progressBar = findViewById(R.id.progressBar);
+
+        // Инициализация launcher для выбора изображения
+        imagePickerLauncher = registerForActivityResult(
+            new ActivityResultContracts.GetContent(),
+            uri -> {
+                if (uri != null) {
+                    try {
+                        // Показываем прогресс
+                        showProgress(true);
+                        
+                        // Загружаем и обрабатываем изображение в фоновом потоке
+                        new Thread(() -> {
+                            try {
+                                Bitmap bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), uri);
+                                // Создаем квадратное изображение
+                                Bitmap squareBitmap = createSquareBitmap(bitmap);
+                                // Сжимаем изображение
+                                Bitmap resizedBitmap = getResizedBitmap(squareBitmap, 300);
+                                
+                                // Сохраняем изображение
+                                saveAvatarToPreferences(resizedBitmap);
+                                
+                                // Обновляем UI в основном потоке
+                                runOnUiThread(() -> {
+                                    avatarIv.setImageBitmap(resizedBitmap);
+                                    showProgress(false);
+                                    Toast.makeText(this, "Аватар успешно обновлен", Toast.LENGTH_SHORT).show();
+                                });
+                                
+                                // Освобождаем ресурсы
+                                if (bitmap != squareBitmap) {
+                                    bitmap.recycle();
+                                }
+                                if (resizedBitmap != squareBitmap) {
+                                    squareBitmap.recycle();
+                                }
+                            } catch (Exception e) {
+                                runOnUiThread(() -> {
+                                    Log.e(TAG, "Ошибка при обработке изображения: " + e.getMessage());
+                                    Toast.makeText(this, "Ошибка при обработке изображения", Toast.LENGTH_SHORT).show();
+                                    showProgress(false);
+                                });
+                            }
+                        }).start();
+                    } catch (Exception e) {
+                        Log.e(TAG, "Ошибка при загрузке изображения: " + e.getMessage());
+                        Toast.makeText(this, "Ошибка при загрузке изображения", Toast.LENGTH_SHORT).show();
+                        showProgress(false);
+                    }
+                }
+            }
+        );
+
+        // Заменяем прямой вызов выбора изображения на показ меню
+        avatarIv.setOnClickListener(v -> showAvatarOptionsMenu());
+
+        // Загрузка сохраненного аватара
+        loadAvatarFromPreferences();
 
         // Установка кэшированных данных (если есть)
         String cachedUsername = sharedPreferences.getString(KEY_USERNAME, null);
@@ -372,6 +446,98 @@ public class ProfileActivity extends AppCompatActivity {
             isLoading = false;
             if (progressBar != null) progressBar.setVisibility(View.GONE);
         }
+    }
+
+    private void showAvatarOptionsMenu() {
+        PopupMenu popup = new PopupMenu(this, avatarIv);
+        popup.getMenu().add(0, 1, 0, "Выбрать изображение");
+        popup.getMenu().add(0, 2, 0, "Сбросить аватар");
+
+        popup.setOnMenuItemClickListener(item -> {
+            switch (item.getItemId()) {
+                case 1:
+                    imagePickerLauncher.launch("image/*");
+                    return true;
+                case 2:
+                    resetAvatar();
+                    return true;
+                default:
+                    return false;
+            }
+        });
+
+        popup.show();
+    }
+
+    private void resetAvatar() {
+        // Удаляем сохраненный аватар
+        sharedPreferences.edit().remove(KEY_AVATAR).apply();
+        // Устанавливаем стандартное изображение
+        avatarIv.setImageResource(R.drawable.cactus);
+        Toast.makeText(this, "Аватар сброшен", Toast.LENGTH_SHORT).show();
+    }
+
+    private void saveAvatarToPreferences(Bitmap bitmap) {
+        try {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            String encodedImage = Base64.encodeToString(baos.toByteArray(), Base64.DEFAULT);
+            sharedPreferences.edit().putString(KEY_AVATAR, encodedImage).apply();
+        } catch (Exception e) {
+            Log.e(TAG, "Ошибка при сохранении аватара: " + e.getMessage());
+            Toast.makeText(this, "Ошибка при сохранении аватара", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void loadAvatarFromPreferences() {
+        try {
+            String encodedImage = sharedPreferences.getString(KEY_AVATAR, null);
+            if (encodedImage != null) {
+                byte[] decodedString = Base64.decode(encodedImage, Base64.DEFAULT);
+                Bitmap decodedBitmap = BitmapFactory.decodeByteArray(decodedString, 0, decodedString.length);
+                if (decodedBitmap != null) {
+                    avatarIv.setImageBitmap(decodedBitmap);
+                } else {
+                    // Если не удалось декодировать изображение, устанавливаем стандартное
+                    avatarIv.setImageResource(R.drawable.cactus);
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Ошибка при загрузке аватара: " + e.getMessage());
+            // В случае ошибки устанавливаем стандартное изображение
+            avatarIv.setImageResource(R.drawable.cactus);
+        }
+    }
+
+    private Bitmap createSquareBitmap(Bitmap bitmap) {
+        if (bitmap == null) return null;
+        
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int size = Math.min(width, height);
+        
+        int x = (width - size) / 2;
+        int y = (height - size) / 2;
+        
+        return Bitmap.createBitmap(bitmap, x, y, size, size);
+    }
+
+    private Bitmap getResizedBitmap(Bitmap image, int maxSize) {
+        if (image == null) return null;
+        
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitmapRatio = (float) width / (float) height;
+        if (bitmapRatio > 1) {
+            width = maxSize;
+            height = (int) (width / bitmapRatio);
+        } else {
+            height = maxSize;
+            width = (int) (height * bitmapRatio);
+        }
+
+        return Bitmap.createScaledBitmap(image, width, height, true);
     }
 
     @Override

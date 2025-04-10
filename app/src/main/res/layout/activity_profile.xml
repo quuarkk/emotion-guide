@@ -40,13 +40,25 @@
                 android:orientation="horizontal"
                 android:padding="16dp">
 
-                <!-- Статичная картинка -->
-                <ImageView
-                    android:id="@+id/avatar_iv"
+                <!-- Контейнер для круглого аватара -->
+                <androidx.cardview.widget.CardView
                     android:layout_width="80dp"
                     android:layout_height="80dp"
-                    android:src="@drawable/cactus"
-                    android:contentDescription="Аватар пользователя" />
+                    app:cardCornerRadius="40dp"
+                    app:cardElevation="0dp">
+
+                    <ImageView
+                        android:id="@+id/avatar_iv"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/cactus"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackground"
+                        android:scaleType="centerCrop"
+                        android:contentDescription="Аватар пользователя" />
+
+                </androidx.cardview.widget.CardView>
 
                 <!-- Никнейм и email -->
                 <LinearLayout
