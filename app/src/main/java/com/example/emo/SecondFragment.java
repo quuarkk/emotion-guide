@@ -1,9 +1,18 @@
 package com.example.emo;
 
+import android.app.Dialog;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.ClickableSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
@@ -21,7 +30,6 @@ public class SecondFragment extends DialogFragment {
     }
 
     @Override
-
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
@@ -46,6 +54,9 @@ public class SecondFragment extends DialogFragment {
                     wellbeingScore, activityScore, moodScore, interpretation
             );
             binding.textviewSecond.setText(result);
+            
+            // Делаем номер телефона кликабельным
+            makePhoneNumberClickable(binding.textviewSecond);
         } else {
             binding.textviewSecond.setText("Ошибка: данные не переданы");
         }
@@ -66,5 +77,48 @@ public class SecondFragment extends DialogFragment {
     public void onDestroyView() {
         super.onDestroyView();
         binding = null;
+    }
+
+    private void makePhoneNumberClickable(TextView textView) {
+        String text = textView.getText().toString();
+        SpannableString spannableString = new SpannableString(text);
+        
+        int startIndex = text.indexOf("<phone>");
+        int endIndex = text.indexOf("</phone>");
+        
+        if (startIndex != -1 && endIndex != -1) {
+            // Извлекаем номер телефона
+            final String phoneNumber = text.substring(startIndex + 7, endIndex);
+            
+            // Создаем кликабельный span
+            ClickableSpan clickableSpan = new ClickableSpan() {
+                @Override
+                public void onClick(@NonNull View view) {
+                    // Создаем Intent для звонка
+                    Intent intent = new Intent(Intent.ACTION_DIAL);
+                    intent.setData(Uri.parse("tel:" + phoneNumber.replaceAll("[^+0-9]", "")));
+                    try {
+                        startActivity(intent);
+                    } catch (Exception e) {
+                        Toast.makeText(getContext(), "Не удалось открыть приложение для звонка", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            };
+            
+            // Удаляем теги из текста
+            String cleanText = text.replace("<phone>", "").replace("</phone>", "");
+            SpannableString cleanSpannable = new SpannableString(cleanText);
+            
+            // Вычисляем новые индексы для номера телефона в очищенном тексте
+            int phoneStartIndex = startIndex;
+            int phoneEndIndex = startIndex + phoneNumber.length();
+            
+            // Применяем span к тексту
+            cleanSpannable.setSpan(clickableSpan, phoneStartIndex, phoneEndIndex, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+            
+            // Устанавливаем текст и делаем его кликабельным
+            textView.setText(cleanSpannable);
+            textView.setMovementMethod(LinkMovementMethod.getInstance());
+        }
     }
 }
