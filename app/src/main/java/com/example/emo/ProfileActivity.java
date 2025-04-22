@@ -560,7 +560,9 @@ public class ProfileActivity extends AppCompatActivity {
                 id == R.id.ChartsFragment) {
             Intent intent = new Intent(ProfileActivity.this, MainActivity.class);
             intent.putExtra("fragment_id", id);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
             startActivity(intent);
+            finish();
             return true;
         }
         

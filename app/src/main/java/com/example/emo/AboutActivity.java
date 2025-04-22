@@ -51,6 +51,8 @@ public class AboutActivity extends AppCompatActivity {
                 try {
                     if (id == R.id.ProfileActivity) {
                         startActivity(new Intent(AboutActivity.this, ProfileActivity.class));
+                        finish();
+                        return true;
                     } else if (id == R.id.FirstFragment ||
                             id == R.id.TestsFragment ||
                             id == R.id.AiPsychologistFragment ||
@@ -58,7 +60,10 @@ public class AboutActivity extends AppCompatActivity {
                             id == R.id.ChartsFragment) {
                         Intent intent = new Intent(AboutActivity.this, MainActivity.class);
                         intent.putExtra("fragment_id", id);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                         startActivity(intent);
+                        finish();
+                        return true;
                     } else if (id == R.id.AboutActivity) {
                         // Уже находимся в AboutActivity, ничего не делаем
                     } else if (id == R.id.action_logout) {

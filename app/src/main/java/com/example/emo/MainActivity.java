@@ -62,13 +62,11 @@ public class MainActivity extends AppCompatActivity {
                     if (id == R.id.ProfileActivity) {
                         Log.d(TAG, "Переход к ProfileActivity");
                         startActivity(new Intent(MainActivity.this, ProfileActivity.class));
+                        drawer.closeDrawer(GravityCompat.START);
+                        return true;
                     } else if (id == R.id.FirstFragment) {
                         Log.d(TAG, "Переход к FirstFragment");
                         navController.navigate(R.id.FirstFragment);
-                        // Изменяем заголовок для FirstFragment
-                        if (getSupportActionBar() != null) {
-                            getSupportActionBar().setTitle("Оцените свое состояние");
-                        }
                     } else if (id == R.id.TestsFragment) {
                         Log.d(TAG, "Переход к TestsFragment");
                         navController.navigate(R.id.TestsFragment);
@@ -84,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
                     } else if (id == R.id.AboutActivity) {
                         Log.d(TAG, "Переход к AboutActivity");
                         startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                        drawer.closeDrawer(GravityCompat.START);
+                        return true;
                     } else if (id == R.id.action_logout) {
                         FirebaseAuth.getInstance().signOut();
                         startActivity(new Intent(MainActivity.this, LoginActivity.class));
