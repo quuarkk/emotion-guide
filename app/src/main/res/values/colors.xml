@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#1E88E5</color> <!-- Обновляем на более яркий синий -->
+    <color name="positive_color">#4CAF50</color>
+    <color name="negative_color">#D32F2F</color>
+    <color name="calculate_button_background">#FFD54F</color>
+    <color name="calculate_button_text">#000000</color>
+    <color name="card_background">#F5F5F5</color>
+    <color name="custom_blue">#A3BFFA</color> <!-- Нежный голубой вместо #0000FF -->
+    <color name="text_color">#212121</color>
+    <color name="button_background">#E0E0E0</color>
+    <color name="button_pressed">#B0B0B0</color>
+    <color name="button_zero">#6B7280</color> <!-- Глубокий серо-голубой вместо #1976D2 -->
+    <color name="button_positive">#4CAF50</color>
+    <color name="button_negative">#D32F2F</color>
+    <color name="background_color">#FAFAFA</color>
+    <color name="resulting_button_color">#F06292</color>
+    <color name="san_answer_unselected">#ced7db</color> <!-- Серый для невыбранных кнопок (светлая тема) -->
+    <color name="san_answer_zero">#b8c9d1</color> <!-- Чуть темнее для кнопки "0" в светлой теме -->
+    <color name="san_answer_selected_positive">#4CAF50</color> <!-- Зелёный для положительного -->
+    <color name="san_answer_selected_negative">#ff5353</color> <!-- Красный для отрицательного -->
+    <!-- Цвета для настроения -->
+    <color name="mood_very_bad">#D32F2F</color>
+    <color name="mood_bad">#A3BFFA</color> <!-- Нежный голубой вместо #FF6600 -->
+    <color name="mood_neutral">#FFCC00</color>
+    <color name="mood_good">#99CC00</color>
+    <color name="mood_very_good">#009900</color>
+
+    <color name="chart_background">#FFFFFF</color>
+    <color name="chart_grid_color">#D3D3D3</color>
+    <color name="chart_text_color">#000000</color>
+    <color name="chart_wellbeing_line">#A3BFFA</color> <!-- Нежный голубой вместо #2A63F6 -->
+    <color name="chart_activity_line">#4CAF50</color>
+    <color name="chart_mood_line">#FFCC00</color>
+    
+    <!-- Цвета для медитации -->
+    <color name="meditation_gradient_start">#5E17EB</color> <!-- Глубокий фиолетовый -->
+    <color name="meditation_gradient_mid1">#9D4EDD</color> <!-- Лавандовый -->
+    <color name="meditation_gradient_mid2">#C77DFF</color> <!-- Сиреневый -->
+    <color name="meditation_gradient_mid3">#E0AAFF</color> <!-- Светло-сиреневый -->
+    <color name="meditation_gradient_mid4">#48CAE4</color> <!-- Бирюзовый -->
+    <color name="meditation_gradient_mid5">#90E0EF</color> <!-- Светло-голубой -->
+    <color name="meditation_gradient_mid6">#ADE8F4</color> <!-- Лазурный -->
+    <color name="meditation_gradient_mid7">#CAF0F8</color> <!-- Бледно-голубой -->
+    <color name="meditation_gradient_end">#FFFFFF</color> <!-- Белый -->
+    <color name="meditation_accent">#9D4EDD</color>
+    <color name="meditation_player_background">#292C35</color>
+    <color name="meditation_text_color">#FFFFFF</color> <!-- Цвет текста на градиенте -->
+    <color name="hint_color">#9E9E9E</color> <!-- Добавляем цвет для подсказок -->
+</resources>

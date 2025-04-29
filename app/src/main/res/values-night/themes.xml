@@ -1,0 +1,25 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Theme.Emo" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+        <item name="colorPrimary">#7F9CF5</item> <!-- Приглушённый тёмный голубой -->
+        <item name="colorPrimaryVariant">#7F9CF5</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/teal_200</item>
+        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorOnSecondary">@color/black</item>
+        <item name="android:statusBarColor">#7F9CF5</item>
+    </style>
+
+    <style name="Theme.Emo.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="colorPrimary">#7F9CF5</item>
+        <item name="colorPrimaryVariant">#7F9CF5</item>
+        <item name="android:statusBarColor">#7F9CF5</item>
+    </style>
+
+    <style name="Theme.Emo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="colorPrimary">#7F9CF5</item>
+        <item name="android:background">#7F9CF5</item>
+    </style>
+</resources>

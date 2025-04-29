@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ProfileActivity"
+        android:icon="@drawable/personal_office"
+        android:title="Личный кабинет" />
+    <item
+        android:id="@+id/FirstFragment"
+        android:icon="@drawable/ic_mood"
+        android:title="Настроение" />
+    <item
+        android:id="@+id/ChartsFragment"
+        android:icon="@drawable/ic_menu_recent_history"
+        android:title="Графики состояния" />
+    <item
+        android:id="@+id/TestsFragment"
+        android:icon="@drawable/ic_tests"
+        android:title="Тесты" />
+    <item
+        android:id="@+id/RelaxationFragment"
+        android:icon="@drawable/ic_relaxation"
+        android:title="Методики и релаксации" />
+    <item
+        android:id="@+id/MeditationFragment"
+        android:icon="@drawable/ic_meditation"
+        android:title="Медитация" />
+    <item
+        android:id="@+id/AiPsychologistFragment"
+        android:icon="@drawable/ic_menu_help"
+        android:title="ИИ-психолог" />
+
+    <item
+        android:id="@+id/AboutActivity"
+        android:icon="@drawable/ic_info"
+        android:title="О нас" />
+
+    <item
+        android:id="@+id/action_logout"
+        android:icon="@drawable/ic_log_out"
+        android:title="Выйти" />
+
+</menu> 
