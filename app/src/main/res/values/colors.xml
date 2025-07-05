@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="blue">#1E88E5</color>
+    <color name="positive_color">#4CAF50</color>
+    <color name="negative_color">#F44336</color>
+    <color name="calculate_button_background">#2196F3</color>
+    <color name="calculate_button_text">#FFFFFF</color>
+    <color name="card_background">#F5F5F5</color>
+    <color name="custom_blue">#2196F3</color>
+    <color name="text_color">#333333</color>
+    <color name="button_background">#E0E0E0</color>
+    <color name="button_pressed">#B0B0B0</color>
+    <color name="button_zero">#9E9E9E</color>
+    <color name="button_positive">#4CAF50</color>
+    <color name="button_negative">#F44336</color>
+    <color name="resulting_button_color">#F06292</color>
+    <color name="san_answer_unselected">#DDDDDD</color>
+    <color name="san_answer_zero">#9E9E9E</color>
+    <color name="san_answer_selected_positive">#4CAF50</color>
+    <color name="san_answer_selected_negative">#F44336</color>
+    
+    <!-- Цвета для настроения -->
+    <color name="mood_very_bad">#F44336</color>
+    <color name="mood_bad">#FF9800</color>
+    <color name="mood_neutral">#FFEB3B</color>
+    <color name="mood_good">#8BC34A</color>
+    <color name="mood_very_good">#4CAF50</color>
+
+    <color name="chart_background">#FFFFFF</color>
+    <color name="chart_grid_color">#E0E0E0</color>
+    <color name="chart_text_color">#212121</color>
+    <color name="chart_wellbeing_line">#2196F3</color>
+    <color name="chart_activity_line">#4CAF50</color>
+    <color name="chart_mood_line">#FF9800</color>
+    
+    <color name="hint_color">#757575</color>
+    
+    <!-- Новые цвета для главного экрана и темы -->
+    <color name="primary_blue">#7F9CF5</color>
+    <color name="toolbar_text_color">#FFFFFF</color>
+    <color name="card_title_color">#212121</color>
+    <color name="card_value_color">#2196F3</color>
+    <color name="background_color">#F5F7FA</color>
+    <color name="dark_background">#121212</color>
+    <color name="dark_card_background">#272727</color>
+    <color name="light_gray">#BBBBBB</color>
+</resources>
