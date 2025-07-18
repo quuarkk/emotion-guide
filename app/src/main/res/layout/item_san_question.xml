@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="@color/white">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="8dp">
+
+            <TextView
+                android:id="@+id/positive_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Положительный"
+                android:textColor="@color/positive_color"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/negative_label"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:text="Отрицательный"
+                android:textColor="@color/negative_color"
+                android:textSize="14sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/answer_buttons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_horizontal">
+
+            <Button
+                android:id="@+id/score_minus_3"
+                style="@style/SanAnswerButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="3"
+                android:background="@drawable/san_button_positive_bg"
+                android:textColor="@color/san_answer_text_color" />
+
+            <Button
+                android:id="@+id/score_minus_2"
+                style="@style/SanAnswerButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="2"
+                android:background="@drawable/san_button_positive_bg"
+                android:textColor="@color/san_answer_text_color" />
+
+            <Button
+                android:id="@+id/score_minus_1"
+                style="@style/SanAnswerButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="1"
+                android:background="@drawable/san_button_positive_bg"
+                android:textColor="@color/san_answer_text_color" />
+
+            <Button
+                android:id="@+id/score_0"
+                style="@style/SanAnswerButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="0"
+                android:background="@drawable/san_button_zero_bg"
+                android:textColor="@color/san_answer_text_color" />
+
+            <Button
+                android:id="@+id/score_plus_1"
+                style="@style/SanAnswerButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="1"
+                android:background="@drawable/san_button_negative_bg"
+                android:textColor="@color/san_answer_text_color" />
+
+            <Button
+                android:id="@+id/score_plus_2"
+                style="@style/SanAnswerButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="2"
+                android:background="@drawable/san_button_negative_bg"
+                android:textColor="@color/san_answer_text_color" />
+
+            <Button
+                android:id="@+id/score_plus_3"
+                style="@style/SanAnswerButton"
+                android:layout_width="0dp"
+                android:layout_height="48dp"
+                android:layout_weight="1"
+                android:layout_marginHorizontal="2dp"
+                android:text="3"
+                android:background="@drawable/san_button_negative_bg"
+                android:textColor="@color/san_answer_text_color" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/HomeFragment"
+        android:icon="@drawable/icon_home"
+        android:title="Дом" />
+    <item
+        android:id="@+id/TestsFragment"
+        android:icon="@drawable/icon_tests"
+        android:title="Тесты" />
+    <item
+        android:id="@+id/FirstFragment"
+        android:icon="@drawable/icon_san_test"
+        android:title="САН-тест" />
+    <item
+        android:id="@+id/ProfileFragment"
+        android:icon="@drawable/icon_settings"
+        android:title="Профиль" />
+    <item
+        android:id="@+id/AboutFragment"
+        android:icon="@drawable/icon_about"
+        android:title="О нас" />
+</menu> 

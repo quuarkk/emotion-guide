@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/HomeFragment">
+
+    <fragment
+        android:id="@+id/HomeFragment"
+        android:name="com.example.emo.HomeFragment"
+        android:label="Главная"
+        tools:layout="@layout/fragment_home">
+        <action
+            android:id="@+id/action_HomeFragment_to_FirstFragment"
+            app:destination="@id/FirstFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_ChartsFragment"
+            app:destination="@id/ChartsFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_AiPsychologistFragment"
+            app:destination="@id/AiPsychologistFragment" />
+        <action
+            android:id="@+id/action_HomeFragment_to_RelaxationFragment"
+            app:destination="@id/RelaxationFragment"
+            app:enterAnim="@anim/slide_in_up"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out_down" />
+        <action
+            android:id="@+id/action_HomeFragment_to_BreathingFragment"
+            app:destination="@id/BreathingFragment"
+            app:enterAnim="@anim/slide_in_up"
+            app:exitAnim="@anim/fade_out"
+            app:popEnterAnim="@anim/fade_in"
+            app:popExitAnim="@anim/slide_out_down" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/FirstFragment"
+        android:name="com.example.emo.FirstFragment"
+        android:label="Оценка настроения"
+        tools:layout="@layout/fragment_first">
+        <action
+            android:id="@+id/action_FirstFragment_to_ChartsFragment"
+            app:destination="@id/ChartsFragment" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/TestsFragment"
+        android:name="com.example.emo.TestsFragment"
+        android:label="Психологические тесты"
+        tools:layout="@layout/fragment_tests" />
+
+    <fragment
+        android:id="@+id/AiPsychologistFragment"
+        android:name="com.example.emo.AiPsychologistFragment"
+        android:label="ИИ-психолог"
+        tools:layout="@layout/fragment_ai_psychologist" />
+    <fragment
+        android:id="@+id/ChartsFragment"
+        android:name="com.example.emo.ChartsFragment"
+        android:label="Графики"
+        tools:layout="@layout/fragment_charts" />
+    <fragment
+        android:id="@+id/RelaxationFragment"
+        android:name="com.example.emo.RelaxationFragment"
+        android:label="Релаксационные техники"
+        tools:layout="@layout/fragment_relaxation" />
+    <fragment
+        android:id="@+id/BreathingFragment"
+        android:name="com.example.emo.BreathingFragment"
+        android:label="Дыхательные техники"
+        tools:layout="@layout/fragment_breathing" />
+    <fragment
+        android:id="@+id/ProfileFragment"
+        android:name="com.example.emo.fragments.ProfileFragment"
+        android:label="Профиль"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/AboutFragment"
+        android:name="com.example.emo.fragments.AboutFragment"
+        android:label="О нас"
+        tools:layout="@layout/fragment_about" />
+</navigation>

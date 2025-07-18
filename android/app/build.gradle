@@ -1,0 +1,9 @@
+android {
+    compileSdkVersion 35
+    
+    defaultConfig {
+        // ... существующий код ...
+        // Обратите внимание: не требуется менять targetSdkVersion и minSdkVersion
+    }
+    // ... существующий код ...
+} 

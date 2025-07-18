@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "132215609179",
+    "project_id": "emotions-guide-c173c",
+    "storage_bucket": "emotions-guide-c173c.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:132215609179:android:18a9da4eb49b2f64042c7e",
+        "android_client_info": {
+          "package_name": "com.example.emo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCw7Lb9WcJo10G3kc3rPxBqB662fbLmjbI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

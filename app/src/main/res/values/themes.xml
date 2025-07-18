@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <style name="Base.Theme.Emo" parent="Theme.Material3.Light.NoActionBar">
+    </style>
+
+    <!-- Светлая тема -->
+    <style name="Theme.Emo" parent="Theme.MaterialComponents.Light.NoActionBar">
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryVariant">@color/primary_blue</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="colorSecondary">@color/primary_blue</item>
+        <item name="colorSecondaryVariant">@color/primary_blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <item name="android:statusBarColor">@color/primary_blue</item>
+        <item name="android:windowBackground">@color/background_color</item>
+        <item name="android:textColorPrimary">@color/text_color</item>
+        <item name="android:textColorSecondary">@color/hint_color</item>
+        <item name="cardBackgroundColor">@color/white</item>
+    </style>
+
+    <style name="Theme.Emo.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowSoftInputMode">adjustResize</item>
+        <item name="colorPrimary">@color/primary_blue</item>
+        <item name="colorPrimaryVariant">@color/primary_blue</item>
+        <item name="android:statusBarColor">@color/primary_blue</item>
+    </style>
+
+    <style name="Theme.Emo.AppBarOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Emo.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+</resources>
