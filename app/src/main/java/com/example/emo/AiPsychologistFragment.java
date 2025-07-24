@@ -138,18 +138,22 @@ public class AiPsychologistFragment extends Fragment {
     }
 
     private void updateStatusMessage(String message) {
+        Log.d(TAG, "updateStatusMessage вызван с: " + message);
         // Обрабатываем теги <think> в ответе
         String processedMessage = message;
         int thinkEndIndex = processedMessage.indexOf("</think>");
         if (thinkEndIndex != -1) {
             processedMessage = processedMessage.substring(thinkEndIndex + "</think>".length()).trim();
+            Log.d(TAG, "updateStatusMessage: Удалены теги </think>, результат: " + processedMessage);
             // Если после удаления тегов ничего не осталось, не обновляем сообщение
             if (processedMessage.isEmpty()) {
+                Log.d(TAG, "updateStatusMessage: processedMessage пустой после </think>, выход.");
                 return;
             }
         } else {
             int thinkStartIndex = processedMessage.indexOf("<think>");
             if (thinkStartIndex != -1) {
+                Log.d(TAG, "updateStatusMessage: Найден <think> без </think>, выход.");
                 // Если есть только открывающий тег, не показываем ничего
                 return;
             }
@@ -157,29 +161,94 @@ public class AiPsychologistFragment extends Fragment {
         
         // Если сообщение содержит "Анализирую" и это не финальный ответ, не обновляем
         if (processedMessage.contains("Анализирую") && !processedMessage.trim().endsWith(".")) {
+            Log.d(TAG, "updateStatusMessage: Сообщение содержит 'Анализирую' и не заканчивается на '.', выход.");
             return;
         }
-        
+        boolean messageUpdated = false;
         for (int i = messages.size() - 1; i >= 0; i--) {
             ChatMessage chatMessage = messages.get(i);
             if (chatMessage.getType() == ChatMessage.TYPE_AI && 
                     (chatMessage.getContent().contains("Анализирую") || chatMessage.isLoading())) {
+                Log.d(TAG, "updateStatusMessage: Найдено сообщение ИИ для обновления (index: " + i + ")");
                 messages.set(i, new ChatMessage(processedMessage, ChatMessage.TYPE_AI));
                 chatAdapter.notifyItemChanged(i);
+                Log.d(TAG, "updateStatusMessage: Найдено сообщение ИИ для обновления (index: " + i + ")");
+                messageUpdated = true;
                 break;
             }
         }
+        if (!messageUpdated) { // <-- Проверить флаг
+            Log.d(TAG, "updateStatusMessage: Сообщение ИИ для обновления не найдено или не в состоянии загрузки."); // <-- Добавить
+        }
     }
+
+    String results_empty = "Ты — эмпатичный ИИ-психолог в приложении для ментального благополучия, созданного для русскоязычной аудитории 18–35 лет. " +
+            "Объясни пользователю %s в тёплом, поддерживающем стиле (300–400 слов), почему регулярное прохождение тестов САН (самочувствие, активность, настроение) важно:\n" +
+            "1) Отслеживание эмоционального состояния (например, как стресс влияет на настроение).\n" +
+            "2) Повышение самосознания (понимание своих эмоций).\n" +
+            "3) Получение персонализированных рекомендаций для заботы о себе.\n" +
+            "Учти время года (%s) и время суток (%s) для примеров (например, прогулка летом, тёплый чай зимним вечером). " +
+            "Используй тёплый, нейтральный тон, как у заботливого друга. Избегай названий городов и упоминаний часового пояса, ссылайся только на время года и суток. " +
+            "Добавляй не более 4–5 эмодзи (😊, 🌟, 🛌, ☀️, 🌙) для мягкости и выразительности. Ссылайся на графики в приложении. " +
+            "Завершай вдохновляющей фразой (например, 'Каждый шаг к себе — это прогресс! 🌟'). " +
+            "Избегай медицинских терминов и диагнозов.";
+    String results_not_empty = "Ты — trauma-informed ИИ-ассистент в приложении для ментального благополучия, созданного для русскоязычной аудитории 18–35 лет. " +
+            "Анализируй результаты теста САН (самочувствие, активность, настроение) для пользователя %s и предоставь эмпатичный, поддерживающий анализ (300–400 слов). " +
+            "Все рекомендации ИСКЛЮЧИТЕЛЬНО рекомендательные, медицинские диагнозы строго запрещены. Пользователь не может вести диалог, только запросить повторный анализ. " +
+            "Учитывай время года (%s: дек–фев — зима, мар–май — весна, июн–авг — лето, сен–ноя — осень) и время суток (%s: утро 06:00–12:00, день 12:00–18:00, вечер 18:00–23:00, ночь 23:00–06:00) для релевантных рекомендаций. " +
+            "Избегай упоминаний часового пояса или названий городов, ссылайся только на время года и суток. Ссылайся на графики самочувствия, активности и настроения в приложении. " +
+            "Для разнообразия варьируй формулировки и приветствия. Следуй этим шагам:\n" +
+            "1. **Анализ данных теста САН**:\n" +
+            "   - Оцени до 25 последних результатов теста САН (или все доступные, если их меньше). Шкала: 1–7 (1–3 — низкие, возможный дискомфорт; 4 — нейтральные; 5–7 — высокие, норма).\n" +
+            "   - Сравни текущие показатели с нормой (4–7).\n" +
+            "   - Опиши динамику изменений на графиках приложения (улучшение 😊, ухудшение 😔, стабильность ➡️), если есть предыдущие тесты, с вариативными формулировками (например, 'настроение немного подросло' или 'самочувствие стало ниже').\n" +
+            "   - Если есть поле 'note', кратко упомяни его в анализе.\n" +
+            "2. **Trauma-informed интерпретация**:\n" +
+            "   - Опиши эмоциональное состояние в тёплом, поддерживающем стиле, как у заботливого друга (например, 'похоже, день был непростым' или 'ты в хорошем ресурсе'). Низкие значения (≤3) рассматривай как сигнал возможного эмоционального дискомфорта, но избегай медицинских терминов.\n" +
+            "   - Учти возможный стресс от учёбы, работы или социальной жизни, но не предполагай причин без данных.\n" +
+            "3. **Рекомендации**:\n" +
+            "   - Выбери 2–3 практики из пула, адаптированные к состоянию, времени года и суток. Вариируй формулировки для естественности. Пул практик:\n" +
+            "     - **Низкие показатели (≤3)**:\n" +
+            "       - Ночь: лечь спать (🛌), расслабляющая музыка, дыхательные упражнения (4-4-6 или квадратное дыхание).\n" +
+            "       - Утро: лёгкая зарядка (☀️), дыхательное упражнение для бодрости, постановка небольшой цели.\n" +
+            "       - День: техника grounding (5-4-3-2-1), прогулка, замена негативной мысли (например, 'я не справлюсь' на 'я делаю, что могу').\n" +
+            "       - Вечер: письмо себе, лёгкая растяжка, тёплый чай (🌙).\n" +
+            "       - Зима/вечер/ночь: тёплая ванна, горячий чай.\n" +
+            "       - Лето/утро/день: прогулка, лёгкая физическая активность.\n" +
+            "     - **Нейтральные/высокие (≥4)**:\n" +
+            "       - Ночь: чтение книги (🛌), короткая медитация перед сном, расслабляющая музыка.\n" +
+            "       - Утро: дневник благодарности (☀️), постановка цели на день, прослушивание любимой музыки.\n" +
+            "       - День: творческое занятие (рисование, заметки), прогулка, беседа с другом.\n" +
+            "       - Вечер: просмотр вдохновляющего видео, дневник благодарности, лёгкая растяжка (🌙).\n" +
+            "     - **Общие, с учётом времени года/суток**: прогулка (летом/утром/днем), танцы под музыку, постановка небольшой цели (например, 'выучить 5 новых слов'), чтение книги (зимой/вечером/ночь), беседа с другом, создание коллажа идей (весной/днем).\n" +
+            "   - Для ночного времени (23:00–06:00) с низкими показателями (≤3) приоритетно предлагай лечь спать, предполагая, что пользователь не работает ночью. " +
+            "   - Привяжи рекомендации к показателям, времени года и суток (например, 'летней ночью попробуй лечь спать пораньше 🛌' или 'утром попробуй лёгкую зарядку ☀️').\n" +
+            "4. **Формат ответа**:\n" +
+            "   - Используй тёплый, нейтральный тон, как у заботливого друга, с вариативными приветствиями (например, 'Здравствуйте, %s, давайте посмотрим на ваши результаты? 😊' или 'Привет, %s, как дела сегодня? 🌟').\n" +
+            "   - Структура:\n" +
+            "     А) Анализ текущих результатов и динамики на графиках с эмодзи (😊, 😔, ➡️, не более 4–5 в тексте).\n" +
+            "     Б) 2–3 рекомендации, привязанные к показателям, времени года и суток.\n" +
+            "     В) Вдохновляющая фраза (например, 'Ты делаешь важный шаг для себя! 🌟' или 'Каждый день — новая возможность! ☀️').\n" +
+            "   - Используй не более 4–5 эмодзи (😊, 😔, ➡️, 🌟, 🛌, ☀️, 🌙) для мягкости и выразительности. Избегай медицинских терминов, диагнозов и сложного языка. Подчеркивай эмоциональную безопасность.\n" +
+            "Пример ввода: Самочувствие: 3, Активность: 4, Настроение: 2, Note: 'только текущий тест', Время: %s, сезон: %s.";
+
 
     private void analyzeTestResults() {
         Log.d(TAG, "Запуск метода analyzeTestResults");
 
+        // 1. Проверка сети
         if (!isNetworkAvailable()) {
             Log.d(TAG, "Отсутствует подключение к интернету");
-            messages.add(new ChatMessage("Отсутствует подключение к интернету. Пожалуйста, проверьте ваше соединение и попробуйте снова.", ChatMessage.TYPE_AI));
-            chatAdapter.notifyItemInserted(messages.size() - 1);
-            chatRecyclerView.scrollToPosition(messages.size() - 1);
+            // Создаем и отображаем сообщение об ошибке через ViewModel
+            ChatMessage errorMessage = new ChatMessage(
+                    "Отсутствует подключение к интернету. Пожалуйста, проверьте ваше соединение и попробуйте снова.",
+                    ChatMessage.TYPE_AI
+            );
+            viewModel.addMessage(errorMessage);
+            // Не сохраняем ошибки сети в историю, чтобы не засорять
+            // saveMessage(errorMessage); // <- Можно не сохранять
 
+            // Сброс состояния анализа при ошибке сети
             isAnalysisInProgress = false;
             lastAnalysisTime = 0;
             if (cooldownTimer != null) {
@@ -189,29 +258,34 @@ public class AiPsychologistFragment extends Fragment {
             return;
         }
 
-        for (int i = messages.size() - 1; i >= 0; i--) {
-            ChatMessage message = messages.get(i);
-            if (message.getType() == ChatMessage.TYPE_AI && message.getContent().startsWith("Анализирую")) {
-                messages.remove(i);
-                chatAdapter.notifyItemRemoved(i);
-                break;
-            }
+        // 2. Добавляем сообщение "Пожалуйста, подождите..." через ViewModel
+        //    Устанавливаем флаг isLoading = true
+        ChatMessage waitingMessage = new ChatMessage("⌛ Пожалуйста, подождите...", ChatMessage.TYPE_AI);
+        waitingMessage.setLoading(true);
+        viewModel.addMessage(waitingMessage);
+        // saveMessage(waitingMessage); // <- Не сохраняем промежуточное сообщение
+
+        // Прокручиваем к новому сообщению
+        if (chatRecyclerView != null) {
+            chatRecyclerView.scrollToPosition(viewModel.getMessages().getValue().size() - 1);
         }
 
-        messages.add(new ChatMessage("⌛ Пожалуйста, подождите...", ChatMessage.TYPE_AI));
-        chatAdapter.notifyItemInserted(messages.size() - 1);
-        chatRecyclerView.scrollToPosition(messages.size() - 1);
-
-        // Получаем данные о времени и сезоне
+        // 3. Получаем данные о времени и сезоне
         TimeAndSeasonData timeData = getTimeAndSeasonData();
 
+        // 4. Устанавливаем флаги активности ДО отправки запроса
+        viewModel.setRequestActive(true); // Блокирует UI через observe в onViewCreated
+        isAnalysisInProgress = true; // Внутренний флаг для updateButtonState
+        updateButtonState(); // Обновляем текст кнопки
+
+        // 5. Получаем данные пользователя и формируем промпт
         FirebaseDataManager.getUserName()
                 .thenCompose(username -> {
                     Log.d(TAG, "Получено имя пользователя: " + username);
                     return FirebaseDataManager.getUserTestResults()
                             .thenApply(testResults -> {
                                 Log.d(TAG, "Получено результатов тестов: " + testResults.size());
-                                // Создаем объект с данными о времени и сезоне
+
                                 JSONObject timeDataJson = new JSONObject();
                                 try {
                                     timeDataJson.put("timeOfDay", timeData.timeOfDay);
@@ -220,8 +294,8 @@ public class AiPsychologistFragment extends Fragment {
                                 } catch (Exception e) {
                                     Log.e(TAG, "Ошибка при создании JSON с данными о времени", e);
                                 }
+
                                 JSONObject data = FirebaseDataManager.prepareTestDataForAI(testResults, username);
-                                // Добавляем данные о времени в основной JSON
                                 try {
                                     data.put("timeData", timeDataJson);
                                 } catch (Exception e) {
@@ -236,94 +310,76 @@ public class AiPsychologistFragment extends Fragment {
                     String username = triple.third;
 
                     Log.d(TAG, "Данные для анализа готовы. Количество результатов: " + testResults.size());
-                    Log.d(TAG, "Формирование промта: username=" + username + ", season=" + timeData.season + ", timeOfDay=" + timeData.timeOfDay + ", timestamp=" + timeData.timestamp);
 
                     String systemPrompt;
                     if (testResults.isEmpty()) {
                         Log.d(TAG, "Результаты тестов отсутствуют, формируем промпт для мотивации");
                         systemPrompt = String.format(
-                                "Ты — эмпатичный ИИ-психолог в приложении для ментального благополучия, созданного для русскоязычной аудитории 18–35 лет. " +
-                                        "Объясни пользователю %s в тёплом, поддерживающем стиле (300–400 слов), почему регулярное прохождение тестов САН (самочувствие, активность, настроение) важно:\n" +
-                                        "1) Отслеживание эмоционального состояния (например, как стресс влияет на настроение).\n" +
-                                        "2) Повышение самосознания (понимание своих эмоций).\n" +
-                                        "3) Получение персонализированных рекомендаций для заботы о себе.\n" +
-                                        "Учти время года (%s) и время суток (%s) для примеров (например, прогулка летом, тёплый чай зимним вечером). " +
-                                        "Используй тёплый, нейтральный тон, как у заботливого друга. Избегай названий городов и упоминаний часового пояса, ссылайся только на время года и суток. " +
-                                        "Добавляй не более 4–5 эмодзи (😊, 🌟, 🛌, ☀️, 🌙) для мягкости и выразительности. Ссылайся на графики в приложении. " +
-                                        "Завершай вдохновляющей фразой (например, 'Каждый шаг к себе — это прогресс! 🌟'). " +
-                                        "Избегай медицинских терминов и диагнозов.",
-                                username, timeData.season, timeData.timeOfDay
+                                results_empty, username, timeData.season, timeData.timeOfDay
                         );
                     } else {
                         Log.d(TAG, "Результаты тестов есть, формируем промпт для анализа");
                         systemPrompt = String.format(
-                                "Ты — trauma-informed ИИ-ассистент в приложении для ментального благополучия, созданного для русскоязычной аудитории 18–35 лет. " +
-                                        "Анализируй результаты теста САН (самочувствие, активность, настроение) для пользователя %s и предоставь эмпатичный, поддерживающий анализ (300–400 слов). " +
-                                        "Все рекомендации ИСКЛЮЧИТЕЛЬНО рекомендательные, медицинские диагнозы строго запрещены. Пользователь не может вести диалог, только запросить повторный анализ. " +
-                                        "Учитывай время года (%s: дек–фев — зима, мар–май — весна, июн–авг — лето, сен–ноя — осень) и время суток (%s: утро 06:00–12:00, день 12:00–18:00, вечер 18:00–23:00, ночь 23:00–06:00) для релевантных рекомендаций. " +
-                                        "Избегай упоминаний часового пояса или названий городов, ссылайся только на время года и суток. Ссылайся на графики самочувствия, активности и настроения в приложении. " +
-                                        "Для разнообразия варьируй формулировки и приветствия. Следуй этим шагам:\n" +
-                                        "1. **Анализ данных теста САН**:\n" +
-                                        "   - Оцени до 25 последних результатов теста САН (или все доступные, если их меньше). Шкала: 1–7 (1–3 — низкие, возможный дискомфорт; 4 — нейтральные; 5–7 — высокие, норма).\n" +
-                                        "   - Сравни текущие показатели с нормой (4–7).\n" +
-                                        "   - Опиши динамику изменений на графиках приложения (улучшение 😊, ухудшение 😔, стабильность ➡️), если есть предыдущие тесты, с вариативными формулировками (например, 'настроение немного подросло' или 'самочувствие стало ниже').\n" +
-                                        "   - Если есть поле 'note', кратко упомяни его в анализе.\n" +
-                                        "2. **Trauma-informed интерпретация**:\n" +
-                                        "   - Опиши эмоциональное состояние в тёплом, поддерживающем стиле, как у заботливого друга (например, 'похоже, день был непростым' или 'ты в хорошем ресурсе'). Низкие значения (≤3) рассматривай как сигнал возможного эмоционального дискомфорта, но избегай медицинских терминов.\n" +
-                                        "   - Учти возможный стресс от учёбы, работы или социальной жизни, но не предполагай причин без данных.\n" +
-                                        "3. **Рекомендации**:\n" +
-                                        "   - Выбери 2–3 практики из пула, адаптированные к состоянию, времени года и суток. Вариируй формулировки для естественности. Пул практик:\n" +
-                                        "     - **Низкие показатели (≤3)**:\n" +
-                                        "       - Ночь: лечь спать (🛌), расслабляющая музыка, дыхательные упражнения (4-4-6 или квадратное дыхание).\n" +
-                                        "       - Утро: лёгкая зарядка (☀️), дыхательное упражнение для бодрости, постановка небольшой цели.\n" +
-                                        "       - День: техника grounding (5-4-3-2-1), прогулка, замена негативной мысли (например, 'я не справлюсь' на 'я делаю, что могу').\n" +
-                                        "       - Вечер: письмо себе, лёгкая растяжка, тёплый чай (🌙).\n" +
-                                        "       - Зима/вечер/ночь: тёплая ванна, горячий чай.\n" +
-                                        "       - Лето/утро/день: прогулка, лёгкая физическая активность.\n" +
-                                        "     - **Нейтральные/высокие (≥4)**:\n" +
-                                        "       - Ночь: чтение книги (🛌), короткая медитация перед сном, расслабляющая музыка.\n" +
-                                        "       - Утро: дневник благодарности (☀️), постановка цели на день, прослушивание любимой музыки.\n" +
-                                        "       - День: творческое занятие (рисование, заметки), прогулка, беседа с другом.\n" +
-                                        "       - Вечер: просмотр вдохновляющего видео, дневник благодарности, лёгкая растяжка (🌙).\n" +
-                                        "     - **Общие, с учётом времени года/суток**: прогулка (летом/утром/днем), танцы под музыку, постановка небольшой цели (например, 'выучить 5 новых слов'), чтение книги (зимой/вечером/ночь), беседа с другом, создание коллажа идей (весной/днем).\n" +
-                                        "   - Для ночного времени (23:00–06:00) с низкими показателями (≤3) приоритетно предлагай лечь спать, предполагая, что пользователь не работает ночью. " +
-                                        "   - Привяжи рекомендации к показателям, времени года и суток (например, 'летней ночью попробуй лечь спать пораньше 🛌' или 'утром попробуй лёгкую зарядку ☀️').\n" +
-                                        "4. **Формат ответа**:\n" +
-                                        "   - Используй тёплый, нейтральный тон, как у заботливого друга, с вариативными приветствиями (например, 'Здравствуйте, %s, давайте посмотрим на ваши результаты? 😊' или 'Привет, %s, как дела сегодня? 🌟').\n" +
-                                        "   - Структура:\n" +
-                                        "     А) Анализ текущих результатов и динамики на графиках с эмодзи (😊, 😔, ➡️, не более 4–5 в тексте).\n" +
-                                        "     Б) 2–3 рекомендации, привязанные к показателям, времени года и суток.\n" +
-                                        "     В) Вдохновляющая фраза (например, 'Ты делаешь важный шаг для себя! 🌟' или 'Каждый день — новая возможность! ☀️').\n" +
-                                        "   - Используй не более 4–5 эмодзи (😊, 😔, ➡️, 🌟, 🛌, ☀️, 🌙) для мягкости и выразительности. Избегай медицинских терминов, диагнозов и сложного языка. Подчеркивай эмоциональную безопасность.\n" +
-                                        "Пример ввода: Самочувствие: 3, Активность: 4, Настроение: 2, Note: 'только текущий тест', Время: %s, сезон: %s.",
-                                username, timeData.season, timeData.timeOfDay, username, username, timeData.timestamp, timeData.season
+                                results_not_empty, username, timeData.season, timeData.timeOfDay, username, username, timeData.timestamp, timeData.season
                         );
                     }
 
                     int systemPromptTokens = systemPrompt.length() / 4;
                     int dataTokens = jsonData.length() / 4;
                     int totalRequestTokens = systemPromptTokens + dataTokens;
-
                     Log.d(TAG, "Размер системного промпта: " + systemPrompt.length() + " символов (~" + systemPromptTokens + " токенов)");
                     Log.d(TAG, "Размер данных пользователя: " + jsonData.length() + " символов (~" + dataTokens + " токенов)");
                     Log.d(TAG, "Общий размер запроса: ~" + totalRequestTokens + " токенов");
-
                     Log.d(TAG, "Отправка запроса к API с системным промптом");
 
-                    ApiClient.setStreamListener(partialResponse -> {
-                        Log.d(TAG, "Получено потоковое обновление: " + partialResponse);
-                        requireActivity().runOnUiThread(() -> {
-                            updateStatusMessage(partialResponse);
-                        });
-                    });
+                    // 6. Устанавливаем слушатель потока (если еще не установлен в onViewCreated)
+                    //    Лучше убедиться, что он установлен один раз в onViewCreated.
+                    //    Если он уже установлен там, эту строку можно удалить или оставить для гарантии.
+                    // ApiClient.setStreamListener(partialResponse -> { ... });
+                    //    ВАЖНО: updateStatusMessage уже вызывается из setupStreamListener!
 
+                    // 7. Отправляем запрос
                     ApiClient.sendChatRequest(systemPrompt, jsonData)
                             .thenAccept(response -> {
                                 Log.d(TAG, "Получен финальный ответ от API: " + response);
+
+                                // 8. Обработка финального ответа
                                 requireActivity().runOnUiThread(() -> {
+                                    // a. Обновляем последнее сообщение на финальный ответ
+                                    //    updateStatusMessage обрабатывает теги <think> и обновляет UI
+                                    //    Предполагается, что финальный ответ не содержит <think>
+                                    updateStatusMessage(response);
+
+                                    // b. Сохраняем финальное сообщение ИИ в БД
+                                    //    Нужно получить обновленное сообщение из ViewModel или списка
+                                    List<ChatMessage> currentMessages = viewModel.getMessages().getValue();
+                                    if (currentMessages != null && !currentMessages.isEmpty()) {
+                                        ChatMessage finalAiMessage = currentMessages.get(currentMessages.size() - 1);
+                                        if (finalAiMessage.getType() == ChatMessage.TYPE_AI) {
+                                            // Убедимся, что оно не помечено как загрузка
+                                            finalAiMessage.setLoading(false);
+                                            saveMessage(finalAiMessage); // Сохраняем финальный ответ
+                                        }
+                                    }
+
+                                    // c. Сброс состояния
                                     isAnalysisInProgress = false;
-                                    updateButtonState();
-                                    chatRecyclerView.scrollToPosition(messages.size() - 1);
+                                    lastAnalysisTime = System.currentTimeMillis(); // Запуск cooldown таймера
+                                    // Запуск таймера cooldown, если он нужен
+                                    // if (cooldownTimer != null) cooldownTimer.cancel();
+                                    // cooldownTimer = new CountDownTimer(ANALYSIS_COOLDOWN, 1000) {
+                                    //     public void onTick(long millisUntilFinished) { updateButtonState(); }
+                                    //     public void onFinish() { updateButtonState(); }
+                                    // }.start();
+                                    updateButtonState(); // Обновляем кнопку
+
+                                    // d. Сброс флага активности ViewModel
+                                    viewModel.setRequestActive(false);
+
+                                    // e. Прокрутка
+                                    if (chatRecyclerView != null) {
+                                        chatRecyclerView.scrollToPosition(currentMessages != null ? currentMessages.size() - 1 : 0);
+                                    }
                                 });
                             })
                             .exceptionally(e -> {
@@ -333,26 +389,24 @@ public class AiPsychologistFragment extends Fragment {
                                     if (e instanceof CompletionException && e.getCause() != null) {
                                         errorMessage = e.getCause().getMessage();
                                     }
+                                    String formattedError = "### Ошибка при получении ответа" +
+                                    errorMessage + " " + "Попробуйте повторить запрос позже или проверить подключение к интернету.";
 
-                                    String formattedError = "### Ошибка при получении ответа\n\n" +
-                                            errorMessage + "\n\n" +
-                                            "Попробуйте повторить запрос позже или проверить подключение к интернету.";
+                                    // Обновляем последнее сообщение на сообщение об ошибке
+                                    updateStatusMessage(formattedError);
 
-                                    for (int i = messages.size() - 1; i >= 0; i--) {
-                                        ChatMessage chatMessage = messages.get(i);
-                                        if (chatMessage.getType() == ChatMessage.TYPE_AI && chatMessage.getContent().contains("Анализирую")) {
-                                            messages.set(i, new ChatMessage(formattedError, ChatMessage.TYPE_AI));
-                                            chatAdapter.notifyItemChanged(i);
-                                            break;
-                                        }
-                                    }
+                                    // Сохраняем сообщение об ошибке? Обычно лучше не сохранять.
+                                    // saveMessage(new ChatMessage(formattedError, ChatMessage.TYPE_AI));
 
+                                    // Сброс состояния при ошибке
                                     isAnalysisInProgress = false;
-                                    lastAnalysisTime = 0;
+                                    lastAnalysisTime = 0; // Отменяем cooldown при ошибке
                                     if (cooldownTimer != null) {
                                         cooldownTimer.cancel();
+                                        cooldownTimer = null;
                                     }
                                     updateButtonState();
+                                    viewModel.setRequestActive(false);
                                 });
                                 return null;
                             });
@@ -360,10 +414,28 @@ public class AiPsychologistFragment extends Fragment {
                 .exceptionally(e -> {
                     Log.e(TAG, "Ошибка при получении данных", e);
                     requireActivity().runOnUiThread(() -> {
-                        messages.add(new ChatMessage("Произошла ошибка при получении данных: " + e.getMessage() +
-                                "\n\nПопробуйте перезапустить приложение или проверить подключение к интернету.", ChatMessage.TYPE_AI));
-                        chatAdapter.notifyItemInserted(messages.size() - 1);
-                        chatRecyclerView.smoothScrollToPosition(messages.size() - 1);
+                        // Сообщение об ошибке получения данных
+                        ChatMessage dataErrorMessage = new ChatMessage(
+                                "Произошла ошибка при получении данных: " + e.getMessage() + " Попробуйте перезапустить приложение или проверить подключение к интернету.",
+                                ChatMessage.TYPE_AI
+                        );
+                        viewModel.addMessage(dataErrorMessage);
+                        // saveMessage(dataErrorMessage); // <- Можно не сохранять
+
+                        // Сброс состояния
+                        isAnalysisInProgress = false;
+                        lastAnalysisTime = 0;
+                        if (cooldownTimer != null) {
+                            cooldownTimer.cancel();
+                            cooldownTimer = null;
+                        }
+                        updateButtonState();
+                        viewModel.setRequestActive(false);
+
+                        // Прокрутка
+                        if (chatRecyclerView != null) {
+                            chatRecyclerView.scrollToPosition(viewModel.getMessages().getValue().size() - 1);
+                        }
                     });
                     return null;
                 });
@@ -447,7 +519,15 @@ public class AiPsychologistFragment extends Fragment {
 
         // Обработчики нажатий
         sendButton.setOnClickListener(v -> sendMessage());
-        analyzeButton.setOnClickListener(v -> analyzeResults());
+        analyzeButton.setOnClickListener(v -> {
+            // Вы можете добавить начальную проверку, аналогичную той, что в старом analyzeResults, если нужно
+            if (viewModel.getIsRequestActive().getValue() == Boolean.TRUE) {
+                Toast.makeText(getContext(), "Пожалуйста, дождитесь окончания текущего анализа", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            // Вызов правильного метода анализа
+            analyzeTestResults();
+        });
 
         // Настройка наблюдателей
         viewModel.getMessages().observe(getViewLifecycleOwner(), newMessages -> {
