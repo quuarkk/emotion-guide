@@ -27,8 +27,8 @@ import okhttp3.ResponseBody;
 public class ApiClient {
     private static final String TAG = "ApiClient";
     private static final String API_URL = "https://api.intelligence.io.solutions/api/v1/chat/completions";
-    private static final String API_KEY = "Bearer io-v2-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvd25lciI6IjI1MzZjZGIzLTFjY2QtNDA2Zi04NjE4LTU0OTVmZDdmMzg4OCIsImV4cCI6NDg5NjM1MzkwMX0.Mdl2yTIgRHMw03Vkm9CqWgHzC4JkJF6Ta7JkRxaFCXWHW_eI7JWmqnnKttyiWB7f4rkVfL6sgCN-beEiftl5YA";
-    private static final String MODEL = "Qwen/Qwen3-235B-A22B-FP8";
+    private static final String API_KEY = "Bearer io-v2-eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJvd25lciI6IjBhNzdmYzViLWNlODQtNDNmNi04Mjc2LWJjYzZmOTQ3MTcyMSIsImV4cCI6NDkxMTk5NDc5OH0.En6STI6gS_sBOH9fqzJtudqfrA6B4EWnNIOFEMtLtfJZfC8m0_mihKyykuBqh0xeFZbkXI4isKdbTkzN3uH2mA ";
+    private static final String MODEL = "openai/gpt-oss-120b";
     private static final Executor executor = Executors.newCachedThreadPool();
     
     // Максимальное количество повторных попыток при ошибке 504
